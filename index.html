@@ -857,21 +857,45 @@
       return [label, ...values].map(v => `<option value="${escapeHtml(v)}" ${selected===v ? 'selected' : ''}>${escapeHtml(v)}</option>`).join('');
     }
 
+    function getFilterScopedRows(excludeKey){
+      return state.rawData.filter(r =>
+        (excludeKey === 'channel' || state.channel === "All Channels" || r.channel === state.channel) &&
+        (excludeKey === 'store' || state.store === "All Stores" || r.store === state.store) &&
+        (excludeKey === 'market' || state.market === "All Markets" || r.market === state.market) &&
+        (excludeKey === 'listingAge' || state.listingAge === "All Listing Ages" || r.listingAge === state.listingAge)
+      );
+    }
+
+    function validOrAll(currentValue, allLabel, options){
+      return currentValue === allLabel || options.includes(currentValue) ? currentValue : allLabel;
+    }
+
     function renderSelects(){
-      const filtered = getFiltered();
-      const channelOptions = [...new Set(state.rawData.map(r => r.channel).filter(Boolean))].sort();
-      const storeOptions = [...new Set(state.rawData.map(r => r.store).filter(Boolean))].sort();
-      const marketOptions = [...new Set(state.rawData.map(r => r.market).filter(Boolean))].sort();
-      const listingAgeOptions = [...new Set(state.rawData.map(r => r.listingAge).filter(Boolean))].sort();
-      const ovMonthOpts = getOvMonthOpts(filtered);
+      const channelOptions = [...new Set(getFilterScopedRows('channel').map(r => r.channel).filter(Boolean))].sort();
+      const storeOptions = [...new Set(getFilterScopedRows('store').map(r => r.store).filter(Boolean))].sort();
+      const marketOptions = [...new Set(getFilterScopedRows('market').map(r => r.market).filter(Boolean))].sort();
+      const listingAgeOptions = [...new Set(getFilterScopedRows('listingAge').map(r => r.listingAge).filter(Boolean))].sort();
+
+      state.channel = validOrAll(state.channel, 'All Channels', channelOptions);
+      state.store = validOrAll(state.store, 'All Stores', storeOptions);
+      state.market = validOrAll(state.market, 'All Markets', marketOptions);
+      state.listingAge = validOrAll(state.listingAge, 'All Listing Ages', listingAgeOptions);
 
       el('channelSelect').innerHTML = optionList('All Channels', channelOptions, state.channel);
       el('storeSelect').innerHTML = optionList('All Stores', storeOptions, state.store);
       el('marketSelect').innerHTML = optionList('All Markets', marketOptions, state.market);
       el('listingAgeSelect').innerHTML = optionList('All Listing Ages', listingAgeOptions, state.listingAge);
 
-      if (ovMonthOpts.length && (!state.ovMonth || !ovMonthOpts.includes(state.ovMonth))) state.ovMonth = ovMonthOpts[ovMonthOpts.length - 1];
-      el('monthSelect').innerHTML = ovMonthOpts.map(m => `<option value="${m}" ${state.ovMonth===m ? 'selected' : ''}>${new Date(m+'-01T12:00:00').toLocaleDateString('en-US',{month:'long',year:'numeric'})}</option>`).join('');
+      const filtered = getFiltered();
+      const ovMonthOpts = getOvMonthOpts(filtered);
+      if (ovMonthOpts.length && (!state.ovMonth || !ovMonthOpts.includes(state.ovMonth))) {
+        state.ovMonth = ovMonthOpts[ovMonthOpts.length - 1];
+      }
+      if (!ovMonthOpts.length) state.ovMonth = '';
+
+      el('monthSelect').innerHTML = ovMonthOpts
+        .map(m => `<option value="${m}" ${state.ovMonth===m ? 'selected' : ''}>${new Date(m+'-01T12:00:00').toLocaleDateString('en-US',{month:'long',year:'numeric'})}</option>`)
+        .join('');
     }
 
     function renderHeader(filtered, series){
