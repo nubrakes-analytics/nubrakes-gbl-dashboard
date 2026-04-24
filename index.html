@@ -278,9 +278,7 @@
       color:var(--text);
       box-shadow:0 1px 3px rgba(0,0,0,0.1);
     }
-    .toggle-btn:disabled {
-      cursor:not-allowed;
-    }
+    .toggle-btn:disabled { cursor:not-allowed; }
     .metric-pill {
       padding:5px 13px;
       border-radius:20px;
@@ -404,8 +402,10 @@
         <button class="period-btn" data-period="week">Week</button>
         <button class="period-btn" data-period="month">Month</button>
 
-        <select id="marketSelect" class="select"></select>
         <select id="channelSelect" class="select"></select>
+        <select id="storeSelect" class="select"></select>
+        <select id="marketSelect" class="select"></select>
+        <select id="listingAgeSelect" class="select"></select>
       </div>
 
       <div class="tabs">
@@ -454,6 +454,8 @@
           <div id="shareDimToggle" class="toggle-wrap hidden">
             <button class="toggle-btn active" data-share-dim="channel">By Channel</button>
             <button class="toggle-btn" data-share-dim="market">By Market</button>
+            <button class="toggle-btn" data-share-dim="store">By Store</button>
+            <button class="toggle-btn" data-share-dim="listingAge">By Listing Age</button>
           </div>
         </div>
 
@@ -471,9 +473,7 @@
   </div>
 
   <script>
-    const DATA_URL = "https://raw.githubusercontent.com/nubrakes-analytics/NuBrakes-Copilot/main/data/fact_nubrakes_channel_market_kpi_daily.json";
-
-    const PARTNER_CHANNELS = ["GBL"];
+    const DATA_URL = "https://raw.githubusercontent.com/nubrakes-analytics/NuBrakes-Copilot/main/data/fact_nubrakes_gbl_kpi_daily.json";
 
     const METRICS = [
       { key:"leads",          label:"Leads",           fmt: v => Math.round(v).toLocaleString(),         color:"#6366f1" },
@@ -489,15 +489,13 @@
 
     const ADDITIVE_METRICS   = new Set(["leads","booked","canceled","completed","revenue"]);
     const SHARE_INCOMPATIBLE = new Set(["bookingRate","cancelRate","conversionRate"]);
-    const CAT_COLORS = { GBL:"#f59e0b" };
+    const CHANNEL_COLORS = { VIOC:"#f59e0b", CORE:"#6366f1", Core:"#6366f1", Vioc:"#f59e0b" };
 
     const FALLBACK = [
-      {Month:"2024-10-01T05:00:00.000Z",Week:"2024-09-30T05:00:00.000Z",Day:"2024-10-01T05:00:00.000Z",market:"Atlanta","Channel Category":"GBL",leads:8,jobs_booked:2,canceled_jobs:0,revenue:0,jobs_completed:1},
-      {Month:"2024-10-01T05:00:00.000Z",Week:"2024-09-30T05:00:00.000Z",Day:"2024-10-01T05:00:00.000Z",market:"Austin","Channel Category":"GBL",leads:12,jobs_booked:4,canceled_jobs:0,revenue:0,jobs_completed:3},
-      {Month:"2024-10-01T05:00:00.000Z",Week:"2024-09-30T05:00:00.000Z",Day:"2024-10-01T05:00:00.000Z",market:"Dallas","Channel Category":"GBL",leads:8,jobs_booked:1,canceled_jobs:0,revenue:0,jobs_completed:0},
-      {Month:"2024-10-01T05:00:00.000Z",Week:"2024-09-30T05:00:00.000Z",Day:"2024-10-01T05:00:00.000Z",market:"Houston","Channel Category":"GBL",leads:9,jobs_booked:2,canceled_jobs:0,revenue:0,jobs_completed:1},
-      {Month:"2024-10-01T05:00:00.000Z",Week:"2024-09-30T05:00:00.000Z",Day:"2024-10-01T05:00:00.000Z",market:"Nashville","Channel Category":"GBL",leads:5,jobs_booked:1,canceled_jobs:0,revenue:0,jobs_completed:1},
-      {Month:"2024-10-01T05:00:00.000Z",Week:"2024-09-30T05:00:00.000Z",Day:"2024-10-01T05:00:00.000Z",market:"San Antonio","Channel Category":"GBL",leads:7,jobs_booked:2,canceled_jobs:0,revenue:0,jobs_completed:1}
+      {Month:"2024-10-01T05:00:00.000Z",Week:"2024-09-30T05:00:00.000Z",Day:"2024-10-01T05:00:00.000Z",market:"Atlanta",channel:"VIOC",store:"IR1001",listing_age:"0-30 days",leads:8,jobs_booked:2,canceled_jobs:0,revenue:0,jobs_completed:1},
+      {Month:"2024-10-01T05:00:00.000Z",Week:"2024-09-30T05:00:00.000Z",Day:"2024-10-01T05:00:00.000Z",market:"Austin",channel:"CORE",store:"NB10001",listing_age:"31-60 days",leads:12,jobs_booked:4,canceled_jobs:0,revenue:0,jobs_completed:3},
+      {Month:"2024-10-01T05:00:00.000Z",Week:"2024-09-30T05:00:00.000Z",Day:"2024-10-01T05:00:00.000Z",market:"Dallas",channel:"VIOC",store:"IR1002",listing_age:"61-90 days",leads:8,jobs_booked:1,canceled_jobs:0,revenue:0,jobs_completed:0},
+      {Month:"2024-10-01T05:00:00.000Z",Week:"2024-09-30T05:00:00.000Z",Day:"2024-10-01T05:00:00.000Z",market:"Houston",channel:"CORE",store:"NB10002",listing_age:"90+ days",leads:9,jobs_booked:2,canceled_jobs:0,revenue:0,jobs_completed:1}
     ];
 
     const state = {
@@ -505,8 +503,10 @@
       loading: true,
       fallback: false,
       period: "month",
+      channel: "All Channels",
+      store: "All Stores",
       market: "All Markets",
-      chanCat: "GBL",
+      listingAge: "All Listing Ages",
       tab: "overview",
       trendKey: "leads",
       chartType: "line",
@@ -522,6 +522,22 @@
       return String(str).replace(/[&<>"']/g, s => ({
         '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'
       }[s]));
+    }
+
+    function firstVal(obj, keys, fallback=""){
+      for(const k of keys){
+        if(obj && obj[k] !== undefined && obj[k] !== null && String(obj[k]).trim() !== "") return obj[k];
+      }
+      return fallback;
+    }
+
+    function normalizeChannel(v){
+      const s = String(v || "").trim();
+      if(!s) return "Unmapped";
+      const u = s.toUpperCase();
+      if(u.includes("VIOC") || u.includes("VALVOLINE")) return "VIOC";
+      if(u.includes("CORE") || u.includes("NUBRAKES")) return "CORE";
+      return s;
     }
 
     function aggregate(rows){
@@ -545,20 +561,26 @@
     }
 
     function mapRows(d){
-      return d
-        .filter(r => (r["Channel Category"] || "") === "GBL")
-        .map(r => ({
-          date:  normDate(r.Day||r.date||r.Month||""),
-          Week:  normDate(r.Week||r.Day||r.date||""),
-          Month: normDate(r.Month||r.Day||r.date||""),
-          market: r.market || "",
-          cat: r["Channel Category"] || "Other",
-          leads: Number(r.leads) || 0,
-          booked: Number(r.jobs_booked) || 0,
-          canceled: Number(r.canceled_jobs) || 0,
-          completed: Number(r.jobs_completed) || 0,
-          revenue: Number(r.Revenue ?? r.revenue ?? 0) || 0
-        }));
+      return d.map(r => {
+        const channelRaw = firstVal(r,["channel","Channel","channel_category","Channel Category","channelCategory","source_channel","sourceChannel","lead_channel"],"GBL");
+        const storeRaw = firstVal(r,["store","Store","store_name","storeName","Store Name","store_number","storeNumber","Store Number","storenumber","listing_name","listingName","location_name","locationName"],"Unmapped Store");
+        const listingAgeRaw = firstVal(r,["listing_age","listingAge","listing_age_bucket","listingAgeBucket","Listing Age","Listing Age Bucket","age_bucket","ageBucket"],"Unmapped Listing Age");
+
+        return {
+          date:  normDate(firstVal(r,["Day","day","date","Date","Month","month"],"")),
+          Week:  normDate(firstVal(r,["Week","week","Day","day","date","Date"],"")),
+          Month: normDate(firstVal(r,["Month","month","Day","day","date","Date"],"")),
+          market: String(firstVal(r,["market","Market"],"Unmapped Market")).trim() || "Unmapped Market",
+          channel: normalizeChannel(channelRaw),
+          store: String(storeRaw).trim() || "Unmapped Store",
+          listingAge: String(listingAgeRaw).trim() || "Unmapped Listing Age",
+          leads: Number(firstVal(r,["leads","Leads"],0)) || 0,
+          booked: Number(firstVal(r,["jobs_booked","booked","Bookings","bookings","jobsBooked"],0)) || 0,
+          canceled: Number(firstVal(r,["canceled_jobs","canceled","Canceled Jobs","cancelled_jobs","cancelledJobs"],0)) || 0,
+          completed: Number(firstVal(r,["jobs_completed","completed","Completed Jobs","jobsCompleted"],0)) || 0,
+          revenue: Number(firstVal(r,["revenue","Revenue","invoiced_customer_price","Invoiced Customer Price"],0)) || 0
+        };
+      });
     }
 
     function getPeriodKey(row,period){
@@ -578,13 +600,9 @@
       return isNaN(d.getTime()) ? null : d;
     }
 
-    function sod(d){
-      return new Date(d.getFullYear(), d.getMonth(), d.getDate());
-    }
+    function sod(d){ return new Date(d.getFullYear(), d.getMonth(), d.getDate()); }
 
-    function getRowDate(r){
-      return toDS(r.date || r.Week || r.Month);
-    }
+    function getRowDate(r){ return toDS(r.date || r.Week || r.Month); }
 
     function getPeriodStartDate(pk,period){
       if(period==="week")  return toDS(pk+"T12:00:00");
@@ -600,9 +618,7 @@
         e.setDate(e.getDate()+6);
         return e;
       }
-      if(period==="month"){
-        return new Date(s.getFullYear(), s.getMonth()+1, 0);
-      }
+      if(period==="month") return new Date(s.getFullYear(), s.getMonth()+1, 0);
       return null;
     }
 
@@ -619,7 +635,7 @@
 
     function sumArr(a){ return a.reduce((x,y)=>x+y,0); }
 
-    function calcHistoricalPacing(period,rows,metricKey,lookbackDays=30){
+    function calcHistoricalPacing(period,rows,metricKey,lookbackDays=90){
       if(!rows?.length || !["week","month"].includes(period) || !ADDITIVE_METRICS.has(metricKey)) return null;
 
       const allPK=rows.map(r=>getPeriodKey(r,period)).filter(Boolean).sort();
@@ -691,102 +707,51 @@
       }).filter(Boolean);
 
       if(!shares.length){
-        const ed=sumArr(curElapsed),
-              td=sumArr(curFull),
-              fp=td>0 ? ed/td : null,
-              proj=fp>0 ? curActual/fp : curActual;
-        return {
-          elapsed:ed, total:td, pct:fp, historicalPct:null,
-          projected:proj, actual:curActual, method:"fallback", sampleSize:0
-        };
+        const ed=sumArr(curElapsed), td=sumArr(curFull), fp=td>0 ? ed/td : null, proj=fp>0 ? curActual/fp : curActual;
+        return { elapsed:ed, total:td, pct:fp, historicalPct:null, projected:proj, actual:curActual, method:"fallback", sampleSize:0 };
       }
 
       const hp=Math.max(0,Math.min(shares.reduce((a,b)=>a+b,0)/shares.length,1));
       const proj=Math.max(curActual, hp>0 ? curActual/hp : curActual);
-
-      return {
-        elapsed:sumArr(curElapsed),
-        total:sumArr(curFull),
-        pct:hp,
-        historicalPct:hp,
-        projected:proj,
-        actual:curActual,
-        method:"weekday_weighted_historical",
-        sampleSize:shares.length
-      };
+      return { elapsed:sumArr(curElapsed), total:sumArr(curFull), pct:hp, historicalPct:hp, projected:proj, actual:curActual, method:"weekday_weighted_historical", sampleSize:shares.length };
     }
 
-    function getProjVal(key,val,pacing){
-      return (!pacing || key.includes("Rate") || key==="aov") ? val : (pacing.projected ?? val);
-    }
+    function getProjVal(key,val,pacing){ return (!pacing || key.includes("Rate") || key==="aov") ? val : (pacing.projected ?? val); }
 
     function buildTimeSeries(rows,period){
       const g={};
       rows.forEach(r=>{
-        const k = period==="day"
-          ? (r.date||"").slice(0,10)
-          : period==="week"
-            ? (r.Week||"").slice(0,10)
-            : (r.Month||"").slice(0,7);
-
+        const k = period==="day" ? (r.date||"").slice(0,10) : period==="week" ? (r.Week||"").slice(0,10) : (r.Month||"").slice(0,7);
         if(!k) return;
         if(!g[k]) g[k]=[];
         g[k].push(r);
       });
 
       return Object.keys(g).sort().slice(period==="day" ? -60 : -12).map(k=>{
-        const a=g[k],
-              leads=sumK(a,"leads"),
-              booked=sumK(a,"booked"),
-              canceled=sumK(a,"canceled"),
-              completed=sumK(a,"completed"),
-              revenue=sumK(a,"revenue");
-
-        return {
-          label:k,
-          leads, booked, canceled, completed, revenue,
-          bookingRate: leads ? booked/leads : 0,
-          cancelRate: (canceled+completed) ? canceled/(canceled+completed) : 0,
-          conversionRate: leads ? completed/leads : 0,
-          aov: completed ? revenue/completed : 0
-        };
+        const a=g[k], leads=sumK(a,"leads"), booked=sumK(a,"booked"), canceled=sumK(a,"canceled"), completed=sumK(a,"completed"), revenue=sumK(a,"revenue");
+        return { label:k, leads, booked, canceled, completed, revenue, bookingRate: leads ? booked/leads : 0, cancelRate: (canceled+completed) ? canceled/(canceled+completed) : 0, conversionRate: leads ? completed/leads : 0, aov: completed ? revenue/completed : 0 };
       });
     }
 
     function buildGroupedShareSeries(rows,period,metricKey,groupKey){
-      const tk = r => period==="day"
-        ? (r.date||"").slice(0,10)
-        : period==="week"
-          ? (r.Week||"").slice(0,10)
-          : (r.Month||"").slice(0,7);
-
+      const tk = r => period==="day" ? (r.date||"").slice(0,10) : period==="week" ? (r.Week||"").slice(0,10) : (r.Month||"").slice(0,7);
       const allKeys=[...new Set(rows.map(tk).filter(Boolean))].sort().slice(period==="day" ? -60 : -12);
       const groups=[...new Set(rows.map(r=>r[groupKey]).filter(Boolean))].sort();
-
       const rawMap={};
-      allKeys.forEach(t=>{
-        rawMap[t]={};
-        groups.forEach(g=>{
-          rawMap[t][g]=[];
-        });
-      });
-
+      allKeys.forEach(t=>{ rawMap[t]={}; groups.forEach(g=>{ rawMap[t][g]=[]; }); });
       rows.forEach(r=>{
         const t=tk(r), g=r[groupKey];
         if(t && g && rawMap[t] && rawMap[t][g]) rawMap[t][g].push(r);
       });
-
       return {
         series: allKeys.map(t=>{
           const pt={label:t};
           const ta=aggregate(Object.values(rawMap[t]).flat());
           const tv=ta[metricKey]||0;
-
           groups.forEach(g=>{
             const ga=aggregate(rawMap[t][g]||[]);
             pt[g]=tv>0 ? (ga[metricKey]/tv)*100 : 0;
           });
-
           return pt;
         }),
         groups
@@ -794,18 +759,14 @@
     }
 
     function fmtLabel(label,period){
-      if(period==="day"){
-        return new Date(label+"T12:00:00").toLocaleDateString("en-US",{month:"short",day:"numeric"});
-      }
-      if(period==="week"){
-        return "W" + new Date(label+"T12:00:00").toLocaleDateString("en-US",{month:"short",day:"numeric"});
-      }
+      if(period==="day") return new Date(label+"T12:00:00").toLocaleDateString("en-US",{month:"short",day:"numeric"});
+      if(period==="week") return "W" + new Date(label+"T12:00:00").toLocaleDateString("en-US",{month:"short",day:"numeric"});
       const [y,m]=label.split("-");
       return ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"][parseInt(m,10)-1] + " '" + y.slice(2);
     }
 
     function seriesColor(label,dim){
-      if(dim==="channel") return CAT_COLORS[label] || "#94a3b8";
+      if(dim==="channel") return CHANNEL_COLORS[label] || "#94a3b8";
       const p=["#2563eb","#7c3aed","#0ea5e9","#10b981","#f59e0b","#ef4444","#14b8a6","#8b5cf6"];
       let h=0, s=String(label||"");
       for(let i=0;i<s.length;i++) h=(h*31+s.charCodeAt(i))>>>0;
@@ -822,129 +783,82 @@
 
     function getFiltered(){
       return state.rawData.filter(r =>
+        (state.channel === "All Channels" || r.channel === state.channel) &&
+        (state.store === "All Stores" || r.store === state.store) &&
         (state.market === "All Markets" || r.market === state.market) &&
-        (state.chanCat === "All Channels" || r.cat === state.chanCat)
+        (state.listingAge === "All Listing Ages" || r.listingAge === state.listingAge)
       );
     }
 
-    function getChanCats(){
-      return ["GBL"];
-    }
+    function getOvMonthOpts(filtered){ return [...new Set(filtered.map(r => (r.Month||"").slice(0,7)).filter(Boolean))].sort(); }
+    function getRowsForLabel(filtered, label){ return filtered.filter(r => getPeriodKey(r,state.period) === label); }
+    function pct(c,p){ return p ? ((c-p)/p)*100 : 0; }
+    function getPeriodLabel(){ return state.period==="day" ? "Last 60 Days" : state.period==="week" ? "Last 12 Weeks" : "Last 12 Months"; }
 
-    function getOvMonthOpts(filtered){
-      return [...new Set(filtered.map(r => (r.Month||"").slice(0,7)).filter(Boolean))].sort();
-    }
-
-    function getRowsForLabel(filtered, label){
-      return filtered.filter(r => getPeriodKey(r,state.period) === label);
-    }
-
-    function pct(c,p){
-      return p ? ((c-p)/p)*100 : 0;
-    }
-
-    function getPeriodLabel(){
-      return state.period==="day" ? "Last 60 Days" : state.period==="week" ? "Last 12 Weeks" : "Last 12 Months";
+    function optionList(label, values, selected){
+      return [label, ...values].map(v => `<option value="${escapeHtml(v)}" ${selected===v ? 'selected' : ''}>${escapeHtml(v)}</option>`).join('');
     }
 
     function renderSelects(){
-      const marketSelect = el('marketSelect');
-      const channelSelect = el('channelSelect');
-      const monthSelect = el('monthSelect');
-
       const filtered = getFiltered();
-      const chanCats = getChanCats();
-      const ovMonthOpts = getOvMonthOpts(filtered);
+      const channelOptions = [...new Set(state.rawData.map(r => r.channel).filter(Boolean))].sort();
+      const storeOptions = [...new Set(state.rawData.map(r => r.store).filter(Boolean))].sort();
       const marketOptions = [...new Set(state.rawData.map(r => r.market).filter(Boolean))].sort();
+      const listingAgeOptions = [...new Set(state.rawData.map(r => r.listingAge).filter(Boolean))].sort();
+      const ovMonthOpts = getOvMonthOpts(filtered);
 
-      marketSelect.innerHTML = ['All Markets', ...marketOptions]
-        .map(m => `<option value="${escapeHtml(m)}" ${state.market===m ? 'selected' : ''}>${escapeHtml(m)}</option>`)
-        .join('');
+      el('channelSelect').innerHTML = optionList('All Channels', channelOptions, state.channel);
+      el('storeSelect').innerHTML = optionList('All Stores', storeOptions, state.store);
+      el('marketSelect').innerHTML = optionList('All Markets', marketOptions, state.market);
+      el('listingAgeSelect').innerHTML = optionList('All Listing Ages', listingAgeOptions, state.listingAge);
 
-      channelSelect.innerHTML = ['All Channels', ...chanCats]
-        .map(c => `<option value="${escapeHtml(c)}" ${state.chanCat===c ? 'selected' : ''}>${escapeHtml(c)}</option>`)
-        .join('');
-
-      if (ovMonthOpts.length && (!state.ovMonth || !ovMonthOpts.includes(state.ovMonth))) {
-        state.ovMonth = ovMonthOpts[ovMonthOpts.length - 1];
-      }
-
-      monthSelect.innerHTML = ovMonthOpts
-        .map(m => `<option value="${m}" ${state.ovMonth===m ? 'selected' : ''}>${new Date(m+'-01T12:00:00').toLocaleDateString('en-US',{month:'long',year:'numeric'})}</option>`)
-        .join('');
+      if (ovMonthOpts.length && (!state.ovMonth || !ovMonthOpts.includes(state.ovMonth))) state.ovMonth = ovMonthOpts[ovMonthOpts.length - 1];
+      el('monthSelect').innerHTML = ovMonthOpts.map(m => `<option value="${m}" ${state.ovMonth===m ? 'selected' : ''}>${new Date(m+'-01T12:00:00').toLocaleDateString('en-US',{month:'long',year:'numeric'})}</option>`).join('');
     }
 
     function renderHeader(filtered, series){
       const ovLabel = (() => {
         if(!series.length) return '';
         const ll = series[series.length-1].label;
-
-        if(state.period==='day'){
-          return new Date(ll+'T12:00:00').toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'});
-        }
+        if(state.period==='day') return new Date(ll+'T12:00:00').toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'});
         if(state.period==='week'){
-          const s=new Date(ll+'T12:00:00');
-          const e=new Date(s);
-          e.setDate(e.getDate()+6);
+          const s=new Date(ll+'T12:00:00'), e=new Date(s); e.setDate(e.getDate()+6);
           return s.toLocaleDateString('en-US',{month:'short',day:'numeric'}) + ' – ' + e.toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'});
         }
         return new Date(ll+'-01T12:00:00').toLocaleDateString('en-US',{month:'long',year:'numeric'});
       })();
 
-      el('subtitle').textContent =
-        'NuBrakes · ' +
-        (state.market === 'All Markets' ? 'All Markets' : state.market) +
-        ' · ' +
-        (state.chanCat === 'All Channels' ? 'GBL' : state.chanCat) +
-        ' · ' +
-        (
-          state.tab === 'overview'
-            ? (
-                state.period === 'month' && state.ovMonth
-                  ? new Date(state.ovMonth+'-01T12:00:00').toLocaleDateString('en-US',{month:'long',year:'numeric'})
-                  : ovLabel
-              )
-            : getPeriodLabel()
-        );
+      const parts = [
+        'NuBrakes',
+        state.channel === 'All Channels' ? 'All Channels' : state.channel,
+        state.store === 'All Stores' ? 'All Stores' : state.store,
+        state.market === 'All Markets' ? 'All Markets' : state.market,
+        state.listingAge === 'All Listing Ages' ? 'All Listing Ages' : state.listingAge,
+        state.tab === 'overview'
+          ? (state.period === 'month' && state.ovMonth ? new Date(state.ovMonth+'-01T12:00:00').toLocaleDateString('en-US',{month:'long',year:'numeric'}) : ovLabel)
+          : getPeriodLabel()
+      ];
+      el('subtitle').textContent = parts.join(' · ');
 
-      const badge = el('dataBadge');
-      const badgeText = el('dataBadgeText');
-      const fallbackNote = el('fallbackNote');
-
+      const badge = el('dataBadge'), badgeText = el('dataBadgeText'), fallbackNote = el('fallbackNote');
       if (state.fallback) {
-        badge.className = 'badge sample';
-        badgeText.textContent = 'Sample Data';
-        fallbackNote.classList.remove('hidden');
+        badge.className = 'badge sample'; badgeText.textContent = 'Sample Data'; fallbackNote.classList.remove('hidden');
       } else {
-        badge.className = 'badge live';
-        badgeText.textContent = 'Live Data';
-        fallbackNote.classList.add('hidden');
+        badge.className = 'badge live'; badgeText.textContent = 'Live Data'; fallbackNote.classList.add('hidden');
       }
     }
 
     function renderControls(){
-      document.querySelectorAll('.period-btn').forEach(btn => {
-        btn.classList.toggle('active', btn.dataset.period === state.period);
-      });
-      document.querySelectorAll('.tab-btn').forEach(btn => {
-        btn.classList.toggle('active', btn.dataset.tab === state.tab);
-      });
+      document.querySelectorAll('.period-btn').forEach(btn => btn.classList.toggle('active', btn.dataset.period === state.period));
+      document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.toggle('active', btn.dataset.tab === state.tab));
       el('overviewTab').classList.toggle('hidden', state.tab !== 'overview');
       el('trendsTab').classList.toggle('hidden', state.tab !== 'trends');
     }
 
     function renderOverview(filtered, series){
-      const monthRow = el('monthRow');
-      const monthLabel = el('monthLabel');
-      const pacingBanner = el('pacingBanner');
-
       const latestMonth = getLatestMonthKey(filtered);
       const ovRows = filtered.filter(r => (r.Month||'').slice(0,7) === (state.ovMonth || latestMonth));
-
-      const curr = state.period==='month'
-        ? aggregate(ovRows)
-        : (series.length ? aggregate(getRowsForLabel(filtered, series[series.length-1].label)) : {});
-
+      const curr = state.period==='month' ? aggregate(ovRows) : (series.length ? aggregate(getRowsForLabel(filtered, series[series.length-1].label)) : {});
       const prev = (() => {
         if(state.period==='month'){
           const mk=[...new Set(filtered.map(r=>(r.Month||'').slice(0,7)).filter(Boolean))].sort();
@@ -959,26 +873,14 @@
 
       const pacing = {};
       const isLatest = state.ovMonth === latestMonth;
-      METRICS.forEach(m => {
-        pacing[m.key] = state.period !== 'month'
-          ? calcHistoricalPacing(state.period, filtered, m.key)
-          : (filtered.length && isLatest ? calcHistoricalPacing(state.period, filtered, m.key) : null);
-      });
+      METRICS.forEach(m => { pacing[m.key] = state.period !== 'month' ? calcHistoricalPacing(state.period, filtered, m.key) : (filtered.length && isLatest ? calcHistoricalPacing(state.period, filtered, m.key) : null); });
 
-      monthRow.classList.toggle('hidden', state.period !== 'month');
-      monthLabel.textContent = 'Selected month: ' + (state.ovMonth ? new Date(state.ovMonth+'-01T12:00:00').toLocaleDateString('en-US',{month:'long',year:'numeric'}) : 'Current Month');
-      pacingBanner.classList.toggle('hidden', !(pacing.leads && ['week','month'].includes(state.period)));
+      el('monthRow').classList.toggle('hidden', state.period !== 'month');
+      el('monthLabel').textContent = 'Selected month: ' + (state.ovMonth ? new Date(state.ovMonth+'-01T12:00:00').toLocaleDateString('en-US',{month:'long',year:'numeric'}) : 'Current Month');
+      el('pacingBanner').classList.toggle('hidden', !(pacing.leads && ['week','month'].includes(state.period)));
 
-      const kpiGrid = el('kpiGrid');
-      kpiGrid.innerHTML = METRICS.map(m => {
-        const actual = curr[m.key] || 0;
-        const pac = pacing[m.key] || null;
-        const pv = getProjVal(m.key, actual, pac);
-        const prior = prev[m.key] || 0;
-        const dv = pac && !isRate(m.key) ? pv : actual;
-        const chg = pct(dv, prior);
-        const good = m.invert ? chg <= 0 : chg >= 0;
-
+      el('kpiGrid').innerHTML = METRICS.map(m => {
+        const actual = curr[m.key] || 0, pac = pacing[m.key] || null, pv = getProjVal(m.key, actual, pac), prior = prev[m.key] || 0, dv = pac && !isRate(m.key) ? pv : actual, chg = pct(dv, prior), good = m.invert ? chg <= 0 : chg >= 0;
         return `
           <div class="card tight">
             <div class="section-label">${escapeHtml(m.label)}</div>
@@ -987,14 +889,8 @@
               <span class="delta-chip ${good ? 'good' : 'bad'}">${good ? '▲' : '▼'} ${Math.abs(chg).toFixed(1)}%</span>
               ${renderSparkline(series, m.key, m.color, pac)}
             </div>
-            ${pac && !isRate(m.key) ? `
-              <div class="actual-row">
-                <span class="small-muted">Actual to date</span>
-                <span class="small-strong">${escapeHtml(m.fmt(actual))}</span>
-              </div>
-            ` : ''}
-          </div>
-        `;
+            ${pac && !isRate(m.key) ? `<div class="actual-row"><span class="small-muted">Actual to date</span><span class="small-strong">${escapeHtml(m.fmt(actual))}</span></div>` : ''}
+          </div>`;
       }).join('');
 
       el('funnelCard').innerHTML = renderFunnelCard(curr, prev, state.period, pacing);
@@ -1003,185 +899,49 @@
 
     function renderSparkline(data, metricKey, color, pacing){
       const isR = metricKey.includes('Rate') || metricKey==='aov';
-      const vals = data.map((d,i)=>{
-        const raw=d[metricKey]||0;
-        return (i===data.length-1 && pacing && !isR) ? (pacing.projected ?? raw) : raw;
-      });
-
+      const vals = data.map((d,i)=> i===data.length-1 && pacing && !isR ? (pacing.projected ?? d[metricKey] ?? 0) : (d[metricKey]||0));
       if(vals.length<2) return '';
-
-      const mn=Math.min(...vals),
-            mx=Math.max(...vals),
-            rng=mx-mn || 1,
-            w=80,
-            h=28;
-
-      const pts = vals.map((v,i)=>{
-        const x = ((i/(vals.length-1))*w).toFixed(1);
-        const y = (h-((v-mn)/rng)*h).toFixed(1);
-        return `${x},${y}`;
-      }).join(' ');
-
+      const mn=Math.min(...vals), mx=Math.max(...vals), rng=mx-mn || 1, w=80, h=28;
+      const pts = vals.map((v,i)=>`${((i/(vals.length-1))*w).toFixed(1)},${(h-((v-mn)/rng)*h).toFixed(1)}`).join(' ');
       return `<svg width="80" height="28" aria-hidden="true"><polyline points="${pts}" fill="none" stroke="${color}" stroke-width="1.5" stroke-linejoin="round"></polyline></svg>`;
     }
 
     function renderFunnelCard(curr, prev, period, pacing){
-      const steps=[
-        {key:'leads',label:'Leads',color:'#6366f1'},
-        {key:'booked',label:'Booked',color:'#0ea5e9'},
-        {key:'completed',label:'Completed',color:'#10b981'}
-      ];
-
-      const pc = {
-        leads: getProjVal('leads', curr.leads||0, pacing.leads),
-        booked: getProjVal('booked', curr.booked||0, pacing.booked),
-        completed: getProjVal('completed', curr.completed||0, pacing.completed)
-      };
-
-      const maxV=Math.max(pc.leads||1,1);
-      const pl=period==='day' ? 'day' : period==='week' ? 'week' : 'month';
-
-      return `
-        <div class="card" style="padding:16px 18px 20px;">
-          <div class="section-label" style="font-size:11px;margin-bottom:16px;">Conversion Funnel — Projected Current ${pl}</div>
-          <div style="display:flex;flex-direction:column;gap:6px;">
-            ${steps.map(s=>{
-              const val=pc[s.key]||0;
-              const pw=maxV ? val/maxV : 0;
-              const pv=prev[s.key]||0;
-              const pol=pc.leads>0 && s.key!=='leads' ? ((val/pc.leads)*100).toFixed(1) : null;
-              const chg=pv ? ((val-pv)/pv)*100 : 0;
-              const good=chg>=0;
-
-              return `
-                <div>
-                  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:5px;gap:8px;flex-wrap:wrap;">
-                    <div style="display:flex;align-items:center;gap:8px;">
-                      <div style="width:8px;height:8px;border-radius:50%;background:${s.color};flex-shrink:0;"></div>
-                      <span style="font-size:13px;font-weight:700;color:#111827;">${s.label}</span>
-                      ${pol!==null ? `<span style="font-size:11px;color:#9ca3af;margin-left:2px;">(${pol}% of Leads)</span>` : ''}
-                    </div>
-                    <div style="display:flex;align-items:center;gap:8px;">
-                      <span style="font-size:13px;font-weight:700;color:#111827;">${Math.round(val).toLocaleString()}</span>
-                      ${pv>0 ? `<span class="delta-chip ${good ? 'good' : 'bad'}">${good ? '▲' : '▼'}${Math.abs(chg).toFixed(1)}%</span>` : ''}
-                    </div>
-                  </div>
-                  <div style="position:relative;height:10px;background:#f1f5f9;border-radius:6px;overflow:hidden;">
-                    <div style="position:absolute;left:0;top:0;height:100%;width:${pw*100}%;background:${s.color};border-radius:6px;"></div>
-                    ${pv>0 ? `<div style="position:absolute;left:0;top:0;height:100%;width:${(maxV ? pv/maxV : 0)*100}%;background:none;border-right:2px dashed ${s.color};opacity:0.4;"></div>` : ''}
-                  </div>
-                </div>
-              `;
-            }).join('')}
-          </div>
-        </div>
-      `;
+      const steps=[{key:'leads',label:'Leads',color:'#6366f1'},{key:'booked',label:'Booked',color:'#0ea5e9'},{key:'completed',label:'Completed',color:'#10b981'}];
+      const pc = { leads:getProjVal('leads',curr.leads||0,pacing.leads), booked:getProjVal('booked',curr.booked||0,pacing.booked), completed:getProjVal('completed',curr.completed||0,pacing.completed) };
+      const maxV=Math.max(pc.leads||1,1), pl=period==='day' ? 'day' : period==='week' ? 'week' : 'month';
+      return `<div class="card" style="padding:16px 18px 20px;"><div class="section-label" style="font-size:11px;margin-bottom:16px;">Conversion Funnel — Projected Current ${pl}</div><div style="display:flex;flex-direction:column;gap:6px;">${steps.map(s=>{
+        const val=pc[s.key]||0, pw=maxV ? val/maxV : 0, pv=prev[s.key]||0, pol=pc.leads>0 && s.key!=='leads' ? ((val/pc.leads)*100).toFixed(1) : null, chg=pv ? ((val-pv)/pv)*100 : 0, good=chg>=0;
+        return `<div><div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:5px;gap:8px;flex-wrap:wrap;"><div style="display:flex;align-items:center;gap:8px;"><div style="width:8px;height:8px;border-radius:50%;background:${s.color};flex-shrink:0;"></div><span style="font-size:13px;font-weight:700;color:#111827;">${s.label}</span>${pol!==null ? `<span style="font-size:11px;color:#9ca3af;margin-left:2px;">(${pol}% of Leads)</span>` : ''}</div><div style="display:flex;align-items:center;gap:8px;"><span style="font-size:13px;font-weight:700;color:#111827;">${Math.round(val).toLocaleString()}</span>${pv>0 ? `<span class="delta-chip ${good ? 'good' : 'bad'}">${good ? '▲' : '▼'}${Math.abs(chg).toFixed(1)}%</span>` : ''}</div></div><div style="position:relative;height:10px;background:#f1f5f9;border-radius:6px;overflow:hidden;"><div style="position:absolute;left:0;top:0;height:100%;width:${pw*100}%;background:${s.color};border-radius:6px;"></div>${pv>0 ? `<div style="position:absolute;left:0;top:0;height:100%;width:${(maxV ? pv/maxV : 0)*100}%;background:none;border-right:2px dashed ${s.color};opacity:0.4;"></div>` : ''}</div></div>`;
+      }).join('')}</div></div>`;
     }
 
     function renderComparisonCard(curr, prev, period, pacing){
-      const KPIs=[
-        {key:'leads',label:'Leads',color:'#6366f1'},
-        {key:'booked',label:'Bookings',color:'#0ea5e9'},
-        {key:'completed',label:'Completed',color:'#10b981'},
-        {key:'bookingRate',label:'Book Rate',color:'#8b5cf6'},
-        {key:'conversionRate',label:'Conv. Rate',color:'#14b8a6'}
-      ];
-
+      const KPIs=[{key:'leads',label:'Leads',color:'#6366f1'},{key:'booked',label:'Bookings',color:'#0ea5e9'},{key:'completed',label:'Completed',color:'#10b981'},{key:'bookingRate',label:'Book Rate',color:'#8b5cf6'},{key:'conversionRate',label:'Conv. Rate',color:'#14b8a6'}];
       const pl=period==='day' ? 'day' : period==='week' ? 'week' : 'month';
-      const W=560,H=220,pL=16,pR=16,pT=16,pB=32,cW=W-pL-pR,cH=H-pT-pB,n=KPIs.length,gW=cW/n,bW=Math.min(gW*0.32,22),gap=bW*0.6;
-      const xC=i=>pL+i*gW+gW/2;
-
-      return `
-        <div class="card" style="padding:16px 18px 20px;">
-          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;flex-wrap:wrap;gap:8px;">
-            <div class="section-label" style="font-size:11px;margin-bottom:0;">Projected Current vs Prior Period — Core KPIs</div>
-            <div style="display:flex;gap:14px;font-size:11px;flex-wrap:wrap;">
-              <span style="display:flex;align-items:center;gap:5px;">
-                <span style="width:10px;height:10px;border-radius:2px;background:#6366f1;display:inline-block"></span>
-                <span style="color:#6b7280;font-weight:600;">Projected current ${pl}</span>
-              </span>
-              <span style="display:flex;align-items:center;gap:5px;">
-                <span style="width:10px;height:10px;border-radius:2px;background:#e5e7eb;border:1.5px dashed #9ca3af;display:inline-block"></span>
-                <span style="color:#9ca3af;font-weight:600;">Prior ${pl}</span>
-              </span>
-            </div>
-          </div>
-          <svg viewBox="0 0 ${W} ${H}" style="width:100%;height:auto;">
-            ${[0,0.5,1].map(t => `<line x1="${pL}" x2="${W-pR}" y1="${pT+cH*(1-t)}" y2="${pT+cH*(1-t)}" stroke="#f1f5f9" stroke-width="1"></line>`).join('')}
-            ${KPIs.map((kpi,i)=>{
-              const cx=xC(i);
-              const cv=getProjVal(kpi.key,curr[kpi.key]||0,pacing[kpi.key]);
-              const pv=prev[kpi.key]||0;
-              const lm=Math.max(cv,pv,1);
-              const ch2=Math.max((cv/lm)*cH,0);
-              const ph2=Math.max((pv/lm)*cH,0);
-              const cy=pT+cH-ch2;
-              const py=pT+cH-ph2;
-              const chg=pv ? ((cv-pv)/pv)*100 : 0;
-              const good=chg>=0;
-
-              return `
-                <g>
-                  <rect x="${cx-gap/2-bW}" y="${py}" width="${bW}" height="${ph2}" rx="3" fill="#e5e7eb" opacity="0.8"></rect>
-                  <rect x="${cx+gap/2}" y="${cy}" width="${bW}" height="${ch2}" rx="3" fill="${kpi.color}" opacity="0.9"></rect>
-                  <text x="${cx}" y="${H-4}" text-anchor="middle" font-size="9" fill="#9ca3af">${kpi.label}</text>
-                  ${pv>0 ? `<text x="${cx}" y="${Math.min(cy,py)-5}" text-anchor="middle" font-size="8.5" fill="${good?'#10b981':'#f43f5e'}" font-weight="700">${good?'▲':'▼'}${Math.abs(chg).toFixed(1)}%</text>` : ''}
-                </g>
-              `;
-            }).join('')}
-          </svg>
-        </div>
-      `;
+      const W=560,H=220,pL=16,pR=16,pT=16,pB=32,cW=W-pL-pR,cH=H-pT-pB,n=KPIs.length,gW=cW/n,bW=Math.min(gW*0.32,22),gap=bW*0.6,xC=i=>pL+i*gW+gW/2;
+      return `<div class="card" style="padding:16px 18px 20px;"><div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;flex-wrap:wrap;gap:8px;"><div class="section-label" style="font-size:11px;margin-bottom:0;">Projected Current vs Prior Period — Core KPIs</div><div style="display:flex;gap:14px;font-size:11px;flex-wrap:wrap;"><span style="display:flex;align-items:center;gap:5px;"><span style="width:10px;height:10px;border-radius:2px;background:#6366f1;display:inline-block"></span><span style="color:#6b7280;font-weight:600;">Projected current ${pl}</span></span><span style="display:flex;align-items:center;gap:5px;"><span style="width:10px;height:10px;border-radius:2px;background:#e5e7eb;border:1.5px dashed #9ca3af;display:inline-block"></span><span style="color:#9ca3af;font-weight:600;">Prior ${pl}</span></span></div></div><svg viewBox="0 0 ${W} ${H}" style="width:100%;height:auto;">${[0,0.5,1].map(t => `<line x1="${pL}" x2="${W-pR}" y1="${pT+cH*(1-t)}" y2="${pT+cH*(1-t)}" stroke="#f1f5f9" stroke-width="1"></line>`).join('')}${KPIs.map((kpi,i)=>{
+        const cx=xC(i), cv=getProjVal(kpi.key,curr[kpi.key]||0,pacing[kpi.key]), pv=prev[kpi.key]||0, lm=Math.max(cv,pv,1), ch2=Math.max((cv/lm)*cH,0), ph2=Math.max((pv/lm)*cH,0), cy=pT+cH-ch2, py=pT+cH-ph2, chg=pv ? ((cv-pv)/pv)*100 : 0, good=chg>=0;
+        return `<g><rect x="${cx-gap/2-bW}" y="${py}" width="${bW}" height="${ph2}" rx="3" fill="#e5e7eb" opacity="0.8"></rect><rect x="${cx+gap/2}" y="${cy}" width="${bW}" height="${ch2}" rx="3" fill="${kpi.color}" opacity="0.9"></rect><text x="${cx}" y="${H-4}" text-anchor="middle" font-size="9" fill="#9ca3af">${kpi.label}</text>${pv>0 ? `<text x="${cx}" y="${Math.min(cy,py)-5}" text-anchor="middle" font-size="8.5" fill="${good?'#10b981':'#f43f5e'}" font-weight="700">${good?'▲':'▼'}${Math.abs(chg).toFixed(1)}%</text>` : ''}</g>`;
+      }).join('')}</svg></div>`;
     }
 
     function renderTrends(filtered, series){
-      const metricToolbar = el('metricToolbar');
-      const chartTitle = el('chartTitle');
-      const chartLegend = el('chartLegend');
-      const chartArea = el('chartArea');
-      const shareSummary = el('shareSummary');
-      const shareDimToggle = el('shareDimToggle');
-      const trendViewToggle = el('trendViewToggle');
-
+      const metricToolbar = el('metricToolbar'), chartTitle = el('chartTitle'), chartLegend = el('chartLegend'), chartArea = el('chartArea'), shareSummary = el('shareSummary'), shareDimToggle = el('shareDimToggle'), trendViewToggle = el('trendViewToggle');
       const shareBlocked = SHARE_INCOMPATIBLE.has(state.trendKey);
       if(shareBlocked && state.trendView==='share') state.trendView='absolute';
 
-      metricToolbar.innerHTML = METRICS.map(m => `
-        <button
-          class="metric-pill"
-          data-metric="${m.key}"
-          style="${state.trendKey===m.key ? `border-color:${m.color};background:${m.color};color:#fff;` : ''}"
-        >
-          ${escapeHtml(m.label)}
-        </button>
-      `).join('');
-
-      document.querySelectorAll('#chartTypeToggle .toggle-btn').forEach(btn => {
-        btn.classList.toggle('active', btn.dataset.chart === state.chartType);
-      });
-
-      document.querySelectorAll('#trendViewToggle .toggle-btn').forEach(btn => {
-        btn.classList.toggle('active', btn.dataset.view === state.trendView);
-      });
-
+      metricToolbar.innerHTML = METRICS.map(m => `<button class="metric-pill" data-metric="${m.key}" style="${state.trendKey===m.key ? `border-color:${m.color};background:${m.color};color:#fff;` : ''}">${escapeHtml(m.label)}</button>`).join('');
+      document.querySelectorAll('#chartTypeToggle .toggle-btn').forEach(btn => btn.classList.toggle('active', btn.dataset.chart === state.chartType));
+      document.querySelectorAll('#trendViewToggle .toggle-btn').forEach(btn => btn.classList.toggle('active', btn.dataset.view === state.trendView));
       trendViewToggle.classList.toggle('disabled', shareBlocked);
       shareDimToggle.classList.toggle('hidden', state.trendView !== 'share');
-
-      document.querySelectorAll('#shareDimToggle .toggle-btn').forEach(btn => {
-        btn.classList.toggle('active', btn.dataset.shareDim === state.shareDim);
-      });
+      document.querySelectorAll('#shareDimToggle .toggle-btn').forEach(btn => btn.classList.toggle('active', btn.dataset.shareDim === state.shareDim));
 
       const selM = METRICS.find(m=>m.key===state.trendKey) || METRICS[0];
       const selPacing = calcHistoricalPacing(state.period, filtered, state.trendKey);
-
-      const csdData = buildGroupedShareSeries(filtered,state.period,state.trendKey,'cat');
-      const msdData = buildGroupedShareSeries(filtered,state.period,state.trendKey,'market');
-
-      const actChan = csdData.groups.filter(c => csdData.series.some(d => (d[c]||0)>0));
-      const actMkt  = msdData.groups.filter(m => msdData.series.some(d => (d[m]||0)>0));
-
-      const actShareData = state.shareDim==='market' ? msdData : csdData;
-      const actShareGrps = state.shareDim==='market' ? actMkt : actChan;
+      const grouped = buildGroupedShareSeries(filtered,state.period,state.trendKey,state.shareDim);
+      const activeGroups = grouped.groups.filter(g => grouped.series.some(d => (d[g]||0)>0));
 
       if(state.trendView==='absolute'){
         chartTitle.textContent = selM.label + ' — ' + getPeriodLabel();
@@ -1190,34 +950,14 @@
         shareSummary.classList.add('hidden');
         shareSummary.innerHTML = '';
       } else {
-        chartTitle.textContent = selM.label + ' Share — ' + (state.shareDim==='market' ? 'By Market' : 'By Channel');
-        chartLegend.innerHTML = actShareGrps.map(g => `
-          <div class="legend-item">
-            <div class="legend-dot" style="background:${seriesColor(g,state.shareDim)}"></div>
-            <span style="color:#6b7280;font-weight:600;">${escapeHtml(g)}</span>
-          </div>
-        `).join('');
-
-        chartArea.innerHTML = renderShareChart(actShareData.series, actShareData.groups, state.period, state.shareDim);
-
-        shareSummary.classList.toggle('hidden', actShareGrps.length===0);
-        shareSummary.innerHTML = actShareGrps.map(g=>{
-          const vs=actShareData.series.map(d=>d[g]||0);
-          const lt=vs.length ? vs[vs.length-1] : 0;
-          const pr=vs.length>1 ? vs[vs.length-2] : 0;
-          const chg=pr ? ((lt-pr)/pr)*100 : 0;
-          const good=chg>=0;
-
-          return `
-            <div class="share-card">
-              <div class="share-title">
-                <div class="legend-dot" style="width:8px;height:8px;background:${seriesColor(g,state.shareDim)}"></div>
-                <span>${escapeHtml(g)}</span>
-              </div>
-              <div class="share-value">${lt.toFixed(1)}%</div>
-              <div class="share-delta ${good?'good':'bad'}">${good?'▲':'▼'}${Math.abs(chg).toFixed(1)}% vs prior</div>
-            </div>
-          `;
+        const dimLabel = state.shareDim === 'listingAge' ? 'Listing Age' : state.shareDim.charAt(0).toUpperCase() + state.shareDim.slice(1);
+        chartTitle.textContent = selM.label + ' Share — By ' + dimLabel;
+        chartLegend.innerHTML = activeGroups.map(g => `<div class="legend-item"><div class="legend-dot" style="background:${seriesColor(g,state.shareDim)}"></div><span style="color:#6b7280;font-weight:600;">${escapeHtml(g)}</span></div>`).join('');
+        chartArea.innerHTML = renderShareChart(grouped.series, grouped.groups, state.period, state.shareDim);
+        shareSummary.classList.toggle('hidden', activeGroups.length===0);
+        shareSummary.innerHTML = activeGroups.map(g=>{
+          const vs=grouped.series.map(d=>d[g]||0), lt=vs.length ? vs[vs.length-1] : 0, pr=vs.length>1 ? vs[vs.length-2] : 0, chg=pr ? ((lt-pr)/pr)*100 : 0, good=chg>=0;
+          return `<div class="share-card"><div class="share-title"><div class="legend-dot" style="width:8px;height:8px;background:${seriesColor(g,state.shareDim)}"></div><span>${escapeHtml(g)}</span></div><div class="share-value">${lt.toFixed(1)}%</div><div class="share-delta ${good?'good':'bad'}">${good?'▲':'▼'}${Math.abs(chg).toFixed(1)}% vs prior</div></div>`;
         }).join('');
       }
     }
@@ -1225,260 +965,46 @@
     function renderTrendChart(data, metricKey, metric, period, chartType, pacing){
       const isR = metricKey.includes('Rate') || metricKey==='aov';
       const hasProj = pacing && !isR && ['week','month'].includes(period);
-      const vals = data.map((d,i)=>{
-        const raw = Number(d[metricKey]) || 0;
-        return (i===data.length-1 && hasProj) ? (pacing.projected ?? raw) : raw;
-      });
+      const vals = data.map((d,i)=> i===data.length-1 && hasProj ? (pacing.projected ?? Number(d[metricKey]) || 0) : (Number(d[metricKey])||0));
       const actuals=data.map(d=>Number(d[metricKey])||0);
-
       if(!vals.length) return '<div class="small-muted">No data available.</div>';
-
-      const fy=v=>metricKey.includes('Rate')
-        ? (v*100).toFixed(0)+'%'
-        : Math.abs(v)>=1000
-          ? (v/1000).toFixed(1)+'k'
-          : Math.round(v)+'';
-
+      const fy=v=>metricKey.includes('Rate') ? (v*100).toFixed(0)+'%' : Math.abs(v)>=1000 ? (v/1000).toFixed(1)+'k' : Math.round(v)+'';
       const mn=Math.min(...vals), mx=Math.max(...vals);
       let yMin=0, yMax=mx||1;
-
       if(metricKey.includes('Rate')){
-        const rng=Math.max(mx-mn,0.01), pad=rng*0.18;
-        yMin=Math.max(0,mn-pad);
-        yMax=Math.min(1,mx+pad);
-        if(yMax-yMin<0.04){
-          const mid=(yMax+yMin)/2;
-          yMin=Math.max(0,mid-0.02);
-          yMax=Math.min(1,mid+0.02);
-        }
+        const rng=Math.max(mx-mn,0.01), pad=rng*0.18; yMin=Math.max(0,mn-pad); yMax=Math.min(1,mx+pad);
+        if(yMax-yMin<0.04){ const mid=(yMax+yMin)/2; yMin=Math.max(0,mid-0.02); yMax=Math.min(1,mid+0.02); }
       } else {
-        const rng=Math.max(mx-mn,Math.abs(mx)*0.08,1), pad=rng*0.18;
-        yMin=mx>0 && mn/mx<0.65 ? 0 : Math.max(0,mn-pad);
-        yMax=mx+pad;
-        if(yMax<=yMin) yMax=yMin+1;
+        const rng=Math.max(mx-mn,Math.abs(mx)*0.08,1), pad=rng*0.18; yMin=mx>0 && mn/mx<0.65 ? 0 : Math.max(0,mn-pad); yMax=mx+pad; if(yMax<=yMin) yMax=yMin+1;
       }
-
-      const W=680,H=250,pL=64,pB=44,pT=18,pR=18,cW=W-pL-pR,cH=H-pB-pT,li=vals.length-1;
-      const bW=Math.min(cW/Math.max(vals.length,1)-4,28), step=Math.ceil(vals.length/10), yRng=yMax-yMin||1;
-      const xP=i=>pL+(vals.length===1 ? cW/2 : (i/(vals.length-1))*cW);
-      const yP=v=>pT+cH-((v-yMin)/yRng)*cH;
-      const ticks=Array.from({length:5},(_,i)=>yMin+(yRng*i)/4);
-
+      const W=680,H=250,pL=64,pB=44,pT=18,pR=18,cW=W-pL-pR,cH=H-pB-pT,li=vals.length-1,bW=Math.min(cW/Math.max(vals.length,1)-4,28),step=Math.ceil(vals.length/10),yRng=yMax-yMin||1,xP=i=>pL+(vals.length===1 ? cW/2 : (i/(vals.length-1))*cW),yP=v=>pT+cH-((v-yMin)/yRng)*cH,ticks=Array.from({length:5},(_,i)=>yMin+(yRng*i)/4);
       if(chartType==='line'){
-        const areaPts =
-          `${xP(0).toFixed(1)},${(pT+cH).toFixed(1)} ` +
-          vals.map((v,i)=>`${xP(i).toFixed(1)},${yP(v).toFixed(1)}`).join(' ') +
-          ` ${xP(li).toFixed(1)},${(pT+cH).toFixed(1)}`;
-
+        const areaPts = `${xP(0).toFixed(1)},${(pT+cH).toFixed(1)} ` + vals.map((v,i)=>`${xP(i).toFixed(1)},${yP(v).toFixed(1)}`).join(' ') + ` ${xP(li).toFixed(1)},${(pT+cH).toFixed(1)}`;
         const linePts = vals.map((v,i)=>`${xP(i).toFixed(1)},${yP(v).toFixed(1)}`).join(' ');
-
-        return `
-          <svg viewBox="0 0 ${W} ${H}" style="width:100%;height:auto;overflow:visible;">
-            <defs>
-              <linearGradient id="trendGrad" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0%" stop-color="${metric.color}" stop-opacity="0.18"></stop>
-                <stop offset="100%" stop-color="${metric.color}" stop-opacity="0.01"></stop>
-              </linearGradient>
-            </defs>
-
-            ${ticks.map(t => `
-              <g>
-                <line x1="${pL}" x2="${W-pR}" y1="${yP(t)}" y2="${yP(t)}" stroke="#e5e7eb" stroke-width="1"></line>
-                <text x="${pL-6}" y="${yP(t)+4}" text-anchor="end" font-size="10" fill="#9ca3af">${fy(t)}</text>
-              </g>
-            `).join('')}
-
-            <polygon points="${areaPts}" fill="url(#trendGrad)"></polygon>
-            <polyline points="${linePts}" fill="none" stroke="${metric.color}" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"></polyline>
-
-            ${hasProj && vals.length>1 ? `
-              <line
-                x1="${xP(li-1).toFixed(1)}"
-                y1="${yP(actuals[li-1]).toFixed(1)}"
-                x2="${xP(li).toFixed(1)}"
-                y2="${yP(vals[li]).toFixed(1)}"
-                stroke="${metric.color}"
-                stroke-width="2"
-                stroke-dasharray="5,4"
-                opacity="0.7"
-              ></line>
-            ` : ''}
-
-            ${vals.map((v,i)=>`
-              <circle
-                cx="${xP(i)}"
-                cy="${yP(v)}"
-                r="${i===li && hasProj ? 4 : 3}"
-                fill="${i===li && hasProj ? '#3b82f6' : metric.color}"
-                stroke="#fff"
-                stroke-width="1.5"
-              ></circle>
-            `).join('')}
-
-            ${hasProj ? `
-              <g>
-                <rect x="${xP(li)-32}" y="${yP(vals[li])-24}" width="64" height="18" rx="4" fill="#3b82f6"></rect>
-                <text x="${xP(li)}" y="${yP(vals[li])-12}" text-anchor="middle" font-size="9" fill="#fff" font-weight="700">Proj ${fy(vals[li])}</text>
-              </g>
-            ` : ''}
-
-            ${vals.map((v,i)=>i%step===0 ? `
-              <text x="${xP(i)}" y="${H-6}" text-anchor="middle" font-size="9" fill="#9ca3af">${fmtLabel(data[i].label,period)}</text>
-            ` : '').join('')}
-          </svg>
-        `;
+        return `<svg viewBox="0 0 ${W} ${H}" style="width:100%;height:auto;overflow:visible;"><defs><linearGradient id="trendGrad" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="${metric.color}" stop-opacity="0.18"></stop><stop offset="100%" stop-color="${metric.color}" stop-opacity="0.01"></stop></linearGradient></defs>${ticks.map(t => `<g><line x1="${pL}" x2="${W-pR}" y1="${yP(t)}" y2="${yP(t)}" stroke="#e5e7eb" stroke-width="1"></line><text x="${pL-6}" y="${yP(t)+4}" text-anchor="end" font-size="10" fill="#9ca3af">${fy(t)}</text></g>`).join('')}<polygon points="${areaPts}" fill="url(#trendGrad)"></polygon><polyline points="${linePts}" fill="none" stroke="${metric.color}" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"></polyline>${hasProj && vals.length>1 ? `<line x1="${xP(li-1).toFixed(1)}" y1="${yP(actuals[li-1]).toFixed(1)}" x2="${xP(li).toFixed(1)}" y2="${yP(vals[li]).toFixed(1)}" stroke="${metric.color}" stroke-width="2" stroke-dasharray="5,4" opacity="0.7"></line>` : ''}${vals.map((v,i)=>`<circle cx="${xP(i)}" cy="${yP(v)}" r="${i===li && hasProj ? 4 : 3}" fill="${i===li && hasProj ? '#3b82f6' : metric.color}" stroke="#fff" stroke-width="1.5"></circle>`).join('')}${hasProj ? `<g><rect x="${xP(li)-32}" y="${yP(vals[li])-24}" width="64" height="18" rx="4" fill="#3b82f6"></rect><text x="${xP(li)}" y="${yP(vals[li])-12}" text-anchor="middle" font-size="9" fill="#fff" font-weight="700">Proj ${fy(vals[li])}</text></g>` : ''}${vals.map((v,i)=>i%step===0 ? `<text x="${xP(i)}" y="${H-6}" text-anchor="middle" font-size="9" fill="#9ca3af">${fmtLabel(data[i].label,period)}</text>` : '').join('')}</svg>`;
       }
-
-      return `
-        <svg viewBox="0 0 ${W} ${H}" style="width:100%;height:auto;overflow:visible;">
-          ${ticks.map(t => `
-            <g>
-              <line x1="${pL}" x2="${W-pR}" y1="${yP(t)}" y2="${yP(t)}" stroke="#e5e7eb" stroke-width="1"></line>
-              <text x="${pL-6}" y="${yP(t)+4}" text-anchor="end" font-size="10" fill="#9ca3af">${fy(t)}</text>
-            </g>
-          `).join('')}
-
-          ${vals.map((v,i)=>{
-            const x=pL+(i/Math.max(vals.length,1))*cW+cW/Math.max(vals.length,1)/2;
-            const bh=Math.max(((v-yMin)/yRng)*cH,1.5);
-            const cy=yP(v);
-            const ip=i===li && hasProj;
-
-            return `
-              <g>
-                <rect x="${x-bW/2}" y="${cy}" width="${bW}" height="${Math.max(bh,0)}" rx="3" fill="${ip?'#3b82f6':metric.color}" opacity="${ip?1:0.88}"></rect>
-                ${ip ? `
-                  <g>
-                    <rect x="${x-28}" y="${cy-20}" width="56" height="16" rx="4" fill="#3b82f6"></rect>
-                    <text x="${x}" y="${cy-9}" text-anchor="middle" font-size="9" fill="#fff" font-weight="700">Proj</text>
-                  </g>
-                ` : ''}
-                ${i%step===0 ? `<text x="${x}" y="${H-6}" text-anchor="middle" font-size="9" fill="#9ca3af">${fmtLabel(data[i].label,period)}</text>` : ''}
-              </g>
-            `;
-          }).join('')}
-        </svg>
-      `;
+      return `<svg viewBox="0 0 ${W} ${H}" style="width:100%;height:auto;overflow:visible;">${ticks.map(t => `<g><line x1="${pL}" x2="${W-pR}" y1="${yP(t)}" y2="${yP(t)}" stroke="#e5e7eb" stroke-width="1"></line><text x="${pL-6}" y="${yP(t)+4}" text-anchor="end" font-size="10" fill="#9ca3af">${fy(t)}</text></g>`).join('')}${vals.map((v,i)=>{ const x=pL+(i/Math.max(vals.length,1))*cW+cW/Math.max(vals.length,1)/2, bh=Math.max(((v-yMin)/yRng)*cH,1.5), cy=yP(v), ip=i===li && hasProj; return `<g><rect x="${x-bW/2}" y="${cy}" width="${bW}" height="${Math.max(bh,0)}" rx="3" fill="${ip?'#3b82f6':metric.color}" opacity="${ip?1:0.88}"></rect>${ip ? `<g><rect x="${x-28}" y="${cy-20}" width="56" height="16" rx="4" fill="#3b82f6"></rect><text x="${x}" y="${cy-9}" text-anchor="middle" font-size="9" fill="#fff" font-weight="700">Proj</text></g>` : ''}${i%step===0 ? `<text x="${x}" y="${H-6}" text-anchor="middle" font-size="9" fill="#9ca3af">${fmtLabel(data[i].label,period)}</text>` : ''}</g>`; }).join('')}</svg>`;
     }
 
     function renderShareChart(data, groups, period, dimension){
       if(!data.length) return '<div class="small-muted">No data available.</div>';
-
-      const ms=dimension==='market' ? 50 : 100;
-      const W=680,H=230,pL=44,pB=36,pT=16,pR=16,cW=W-pL-pR,cH=H-pB-pT,n=data.length;
-      const xP=i=>pL+(n>1 ? i/(n-1) : 0.5)*cW;
-      const yP=v=>pT+cH-(Math.min(Math.max(v,0),ms)/ms)*cH;
-      const step=Math.ceil(n/10);
-      const active=groups.filter(g=>data.some(d=>(d[g]||0)>0));
-      const ticks=dimension==='market' ? [0,10,20,30,40,50] : [0,25,50,75,100];
-
-      return `
-        <svg viewBox="0 0 ${W} ${H}" style="width:100%;height:auto;">
-          <defs>
-            ${active.map(g => `
-              <linearGradient id="sg_${g.replace(/[^a-zA-Z0-9_-]/g,'_')}" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0%" stop-color="${seriesColor(g,dimension)}" stop-opacity="0.12"></stop>
-                <stop offset="100%" stop-color="${seriesColor(g,dimension)}" stop-opacity="0.01"></stop>
-              </linearGradient>
-            `).join('')}
-          </defs>
-
-          ${ticks.map(t=>{
-            const y=pT+cH*(1-t/ms);
-            return `
-              <g>
-                <line x1="${pL}" x2="${W-pR}" y1="${y}" y2="${y}" stroke="#e5e7eb" stroke-width="1"></line>
-                <text x="${pL-5}" y="${y+4}" text-anchor="end" font-size="9" fill="#9ca3af">${t}%</text>
-              </g>
-            `;
-          }).join('')}
-
-          ${active.map(g=>{
-            const c=seriesColor(g,dimension);
-            const pts=data.map((d,i)=>`${xP(i).toFixed(1)},${yP(d[g]||0).toFixed(1)}`).join(' ');
-            const gid='sg_'+g.replace(/[^a-zA-Z0-9_-]/g,'_');
-            return `
-              <g>
-                <polygon points="${xP(0).toFixed(1)},${(pT+cH)} ${pts} ${xP(n-1).toFixed(1)},${(pT+cH)}" fill="url(#${gid})"></polygon>
-                <polyline points="${pts}" fill="none" stroke="${c}" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"></polyline>
-              </g>
-            `;
-          }).join('')}
-
-          ${active.map(g =>
-            data.map((d,i)=>`
-              <circle cx="${xP(i)}" cy="${yP(d[g]||0)}" r="2.5" fill="${seriesColor(g,dimension)}" stroke="#fff" stroke-width="1"></circle>
-            `).join('')
-          ).join('')}
-
-          ${data.map((d,i)=>i%step===0 ? `
-            <text x="${xP(i)}" y="${H-4}" text-anchor="middle" font-size="9" fill="#9ca3af">${fmtLabel(d.label,period)}</text>
-          ` : '').join('')}
-        </svg>
-      `;
+      const ms=dimension==='market' || dimension==='store' ? 50 : 100;
+      const W=680,H=230,pL=44,pB=36,pT=16,pR=16,cW=W-pL-pR,cH=H-pB-pT,n=data.length,xP=i=>pL+(n>1 ? i/(n-1) : 0.5)*cW,yP=v=>pT+cH-(Math.min(Math.max(v,0),ms)/ms)*cH,step=Math.ceil(n/10),active=groups.filter(g=>data.some(d=>(d[g]||0)>0)),ticks=ms===50 ? [0,10,20,30,40,50] : [0,25,50,75,100];
+      return `<svg viewBox="0 0 ${W} ${H}" style="width:100%;height:auto;"><defs>${active.map(g => `<linearGradient id="sg_${g.replace(/[^a-zA-Z0-9_-]/g,'_')}" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="${seriesColor(g,dimension)}" stop-opacity="0.12"></stop><stop offset="100%" stop-color="${seriesColor(g,dimension)}" stop-opacity="0.01"></stop></linearGradient>`).join('')}</defs>${ticks.map(t=>{ const y=pT+cH*(1-t/ms); return `<g><line x1="${pL}" x2="${W-pR}" y1="${y}" y2="${y}" stroke="#e5e7eb" stroke-width="1"></line><text x="${pL-5}" y="${y+4}" text-anchor="end" font-size="9" fill="#9ca3af">${t}%</text></g>`; }).join('')}${active.map(g=>{ const c=seriesColor(g,dimension), pts=data.map((d,i)=>`${xP(i).toFixed(1)},${yP(d[g]||0).toFixed(1)}`).join(' '), gid='sg_'+g.replace(/[^a-zA-Z0-9_-]/g,'_'); return `<g><polygon points="${xP(0).toFixed(1)},${(pT+cH)} ${pts} ${xP(n-1).toFixed(1)},${(pT+cH)}" fill="url(#${gid})"></polygon><polyline points="${pts}" fill="none" stroke="${c}" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"></polyline></g>`; }).join('')}${active.map(g => data.map((d,i)=>`<circle cx="${xP(i)}" cy="${yP(d[g]||0)}" r="2.5" fill="${seriesColor(g,dimension)}" stroke="#fff" stroke-width="1"></circle>`).join('')).join('')}${data.map((d,i)=>i%step===0 ? `<text x="${xP(i)}" y="${H-4}" text-anchor="middle" font-size="9" fill="#9ca3af">${fmtLabel(d.label,period)}</text>` : '').join('')}</svg>`;
     }
 
     function bindEvents(){
-      document.querySelectorAll('.period-btn').forEach(btn => {
-        btn.addEventListener('click', () => {
-          state.period = btn.dataset.period;
-          render();
-        });
-      });
-
-      el('marketSelect').addEventListener('change', e => {
-        state.market = e.target.value;
-        render();
-      });
-
-      el('channelSelect').addEventListener('change', e => {
-        state.chanCat = e.target.value;
-        render();
-      });
-
-      document.querySelectorAll('.tab-btn').forEach(btn => {
-        btn.addEventListener('click', () => {
-          state.tab = btn.dataset.tab;
-          render();
-        });
-      });
-
-      el('monthSelect').addEventListener('change', e => {
-        state.ovMonth = e.target.value;
-        render();
-      });
-
-      el('metricToolbar').addEventListener('click', e => {
-        const btn = e.target.closest('[data-metric]');
-        if(!btn) return;
-        state.trendKey = btn.dataset.metric;
-        if(SHARE_INCOMPATIBLE.has(state.trendKey) && state.trendView === 'share') {
-          state.trendView = 'absolute';
-        }
-        render();
-      });
-
-      el('chartTypeToggle').addEventListener('click', e => {
-        const btn = e.target.closest('[data-chart]');
-        if(!btn) return;
-        state.chartType = btn.dataset.chart;
-        render();
-      });
-
-      el('trendViewToggle').addEventListener('click', e => {
-        const btn = e.target.closest('[data-view]');
-        if(!btn) return;
-        if(btn.dataset.view === 'share' && SHARE_INCOMPATIBLE.has(state.trendKey)) return;
-        state.trendView = btn.dataset.view;
-        render();
-      });
-
-      el('shareDimToggle').addEventListener('click', e => {
-        const btn = e.target.closest('[data-share-dim]');
-        if(!btn) return;
-        state.shareDim = btn.dataset.shareDim;
-        render();
-      });
+      document.querySelectorAll('.period-btn').forEach(btn => btn.addEventListener('click', () => { state.period = btn.dataset.period; render(); }));
+      el('channelSelect').addEventListener('change', e => { state.channel = e.target.value; render(); });
+      el('storeSelect').addEventListener('change', e => { state.store = e.target.value; render(); });
+      el('marketSelect').addEventListener('change', e => { state.market = e.target.value; render(); });
+      el('listingAgeSelect').addEventListener('change', e => { state.listingAge = e.target.value; render(); });
+      document.querySelectorAll('.tab-btn').forEach(btn => btn.addEventListener('click', () => { state.tab = btn.dataset.tab; render(); }));
+      el('monthSelect').addEventListener('change', e => { state.ovMonth = e.target.value; render(); });
+      el('metricToolbar').addEventListener('click', e => { const btn = e.target.closest('[data-metric]'); if(!btn) return; state.trendKey = btn.dataset.metric; if(SHARE_INCOMPATIBLE.has(state.trendKey) && state.trendView === 'share') state.trendView = 'absolute'; render(); });
+      el('chartTypeToggle').addEventListener('click', e => { const btn = e.target.closest('[data-chart]'); if(!btn) return; state.chartType = btn.dataset.chart; render(); });
+      el('trendViewToggle').addEventListener('click', e => { const btn = e.target.closest('[data-view]'); if(!btn) return; if(btn.dataset.view === 'share' && SHARE_INCOMPATIBLE.has(state.trendKey)) return; state.trendView = btn.dataset.view; render(); });
+      el('shareDimToggle').addEventListener('click', e => { const btn = e.target.closest('[data-share-dim]'); if(!btn) return; state.shareDim = btn.dataset.shareDim; render(); });
     }
 
     function render(){
@@ -1493,7 +1019,6 @@
 
     async function init(){
       bindEvents();
-
       try {
         const d = await loadData();
         state.rawData = mapRows(d);
@@ -1503,7 +1028,6 @@
         state.rawData = mapRows(FALLBACK);
         state.fallback = true;
       }
-
       state.loading = false;
       el('loading').classList.add('hidden');
       el('app').classList.remove('hidden');
