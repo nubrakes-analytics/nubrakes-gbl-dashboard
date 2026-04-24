@@ -965,7 +965,10 @@
     function renderTrendChart(data, metricKey, metric, period, chartType, pacing){
       const isR = metricKey.includes('Rate') || metricKey==='aov';
       const hasProj = pacing && !isR && ['week','month'].includes(period);
-      const vals = data.map((d,i)=> i===data.length-1 && hasProj ? (pacing.projected ?? Number(d[metricKey]) || 0) : (Number(d[metricKey])||0));
+      const vals = data.map((d,i)=> {
+        const raw = Number(d[metricKey]) || 0;
+        return i===data.length-1 && hasProj ? (pacing.projected ?? raw) : raw;
+      });
       const actuals=data.map(d=>Number(d[metricKey])||0);
       if(!vals.length) return '<div class="small-muted">No data available.</div>';
       const fy=v=>metricKey.includes('Rate') ? (v*100).toFixed(0)+'%' : Math.abs(v)>=1000 ? (v/1000).toFixed(1)+'k' : Math.round(v)+'';
