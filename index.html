@@ -535,9 +535,9 @@
       const s = String(v || "").trim();
       if(!s) return "Unmapped";
       const u = s.toUpperCase();
-      if(u.includes("VIOC") || u.includes("VALVOLINE")) return "VIOC";
+      if(u.includes("VIOC")) return "VIOC";
       if(u.includes("CORE") || u.includes("NUBRAKES")) return "CORE";
-      return s;
+      return s.split("GBL").join("").trim() || s;
     }
 
     function aggregate(rows){
@@ -560,16 +560,74 @@
       return typeof v==="string" && !v.includes("T") ? v.replace(" ","T") : v;
     }
 
+    function getMonthStart(v){
+      const d = new Date(normDate(v));
+      if(isNaN(d.getTime())) return normDate(v);
+      return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-01T00:00:00`;
+    }
+
+    function getWeekStart(v){
+      const d = new Date(normDate(v));
+      if(isNaN(d.getTime())) return normDate(v);
+      const day = d.getDay();
+      const diff = day === 0 ? -6 : 1 - day;
+      d.setDate(d.getDate() + diff);
+      return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}T00:00:00`;
+    }
+
     function mapRows(d){
       return d.map(r => {
         const channelRaw = firstVal(r,["channel","Channel","channel_category","Channel Category","channelCategory","source_channel","sourceChannel","lead_channel"],"GBL");
-        const storeRaw = firstVal(r,["store","Store","store_name","storeName","Store Name","store_number","storeNumber","Store Number","storenumber","listing_name","listingName","location_name","locationName"],"Unmapped Store");
+        const storeRaw = firstVal(r,[
+          "store",
+          "Store",
+          "store_name",
+          "storeName",
+          "Store Name",
+          "store_number",
+          "storeNumber",
+          "Store Number",
+          "storenumber",
+          "store_code",
+          "storeCode",
+          "Store Code",
+          "store_tag",
+          "storeTag",
+          "Store Tag",
+          "store_id",
+          "storeId",
+          "Store ID",
+          "listing",
+          "Listing",
+          "listing_name",
+          "listingName",
+          "Listing Name",
+          "listing_title",
+          "listingTitle",
+          "location",
+          "Location",
+          "location_name",
+          "locationName",
+          "Location Name",
+          "gbp_name",
+          "gbpName",
+          "GBP Name",
+          "gmb_name",
+          "gmbName",
+          "GMB Name",
+          "business_name",
+          "businessName",
+          "Business Name",
+          "google_business_location",
+          "googleBusinessLocation",
+          "Google Business Location"
+        ],"Unmapped Store");
         const listingAgeRaw = firstVal(r,["listing_age","listingAge","listing_age_bucket","listingAgeBucket","Listing Age","Listing Age Bucket","age_bucket","ageBucket"],"Unmapped Listing Age");
 
         return {
-          date:  normDate(firstVal(r,["Day","day","date","Date","Month","month"],"")),
-          Week:  normDate(firstVal(r,["Week","week","Day","day","date","Date"],"")),
-          Month: normDate(firstVal(r,["Month","month","Day","day","date","Date"],"")),
+          date:  normDate(firstVal(r,["date","Date","Day","day","Month","month"],"")),
+          Week:  getWeekStart(normDate(firstVal(r,["Week","week","date","Date","Day","day"],""))),
+          Month: getMonthStart(normDate(firstVal(r,["Month","month","date","Date","Day","day"],""))),
           market: String(firstVal(r,["market","Market"],"Unmapped Market")).trim() || "Unmapped Market",
           channel: normalizeChannel(channelRaw),
           store: String(storeRaw).trim() || "Unmapped Store",
@@ -1024,7 +1082,11 @@
       bindEvents();
       try {
         const d = await loadData();
+        console.log('GBL live sample keys:', Object.keys(d[0] || {}));
+        console.log('GBL live sample row:', d[0]);
         state.rawData = mapRows(d);
+        console.log('GBL mapped sample row:', state.rawData[0]);
+        console.log('GBL store values:', [...new Set(state.rawData.map(r => r.store))].slice(0, 25));
         state.fallback = false;
       } catch (err) {
         console.error(err);
