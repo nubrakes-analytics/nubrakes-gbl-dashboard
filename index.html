@@ -1080,6 +1080,7 @@
 
     async function init(){
       bindEvents();
+
       try {
         const d = await loadData();
         console.log('GBL live sample keys:', Object.keys(d[0] || {}));
@@ -1089,15 +1090,31 @@
         console.log('GBL store values:', [...new Set(state.rawData.map(r => r.store))].slice(0, 25));
         state.fallback = false;
       } catch (err) {
-        console.error(err);
+        console.error('GBL data load failed. Using fallback sample data.', err);
         state.rawData = mapRows(FALLBACK);
         state.fallback = true;
       }
+
       state.loading = false;
       el('loading').classList.add('hidden');
       el('app').classList.remove('hidden');
-      render();
+
+      try {
+        render();
+      } catch (err) {
+        console.error('GBL dashboard render failed:', err);
+        el('subtitle').textContent = 'Dashboard render error. Open DevTools Console to view details.';
+        el('kpiGrid').innerHTML = '<div class="card"><div class="section-label">Render Error</div><div class="small-muted">The data loaded, but the dashboard failed while rendering. Check the console logs for the exact field or function causing the issue.</div></div>';
+      }
     }
+
+    window.addEventListener('error', function(event){
+      console.error('Global dashboard error:', event.error || event.message);
+      const loading = document.getElementById('loading');
+      const app = document.getElementById('app');
+      if(loading) loading.classList.add('hidden');
+      if(app) app.classList.remove('hidden');
+    });
 
     init();
   </script>
