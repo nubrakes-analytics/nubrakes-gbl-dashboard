@@ -38,25 +38,13 @@
     svg { display:block; }
     @keyframes spin { to { transform: rotate(360deg); } }
 
-    .app {
-      min-height: 100vh;
-      padding: 20px 16px;
-    }
-    .container {
-      max-width: 1240px;
-      margin: 0 auto;
-    }
+    .app { min-height: 100vh; padding: 20px 16px; }
+    .container { max-width: 1240px; margin: 0 auto; }
+
     .header { margin-bottom: 20px; }
-    .title {
-      margin: 0;
-      font-size: 20px;
-      font-weight: 700;
-    }
-    .subtitle {
-      margin: 3px 0 0;
-      font-size: 12px;
-      color: var(--muted);
-    }
+    .title { margin: 0; font-size: 20px; font-weight: 700; }
+    .subtitle { margin: 3px 0 0; font-size: 12px; color: var(--muted); }
+
     .status-row {
       display:flex;
       align-items:center;
@@ -64,6 +52,7 @@
       margin-top:6px;
       flex-wrap: wrap;
     }
+
     .badge {
       display:inline-flex;
       align-items:center;
@@ -92,6 +81,7 @@
       flex-wrap:wrap;
       align-items:center;
     }
+
     .period-btn {
       padding:6px 16px;
       border-radius:20px;
@@ -108,6 +98,7 @@
       color:#fff;
       box-shadow:none;
     }
+
     .select {
       padding:9px 12px;
       border-radius:8px;
@@ -151,18 +142,21 @@
       border:1px solid var(--border-soft);
     }
     .card.tight { padding:14px 16px; }
+
     .section-grid {
       display:grid;
       gap:12px;
       margin-bottom:20px;
       grid-template-columns:repeat(auto-fill, minmax(190px, 1fr));
     }
+
     .split-grid {
       display:grid;
       gap:16px;
       margin-bottom:16px;
       grid-template-columns:repeat(2, minmax(0, 1fr));
     }
+
     .section-label {
       font-size:10px;
       font-weight:600;
@@ -171,18 +165,21 @@
       letter-spacing:0.05em;
       margin-bottom:5px;
     }
+
     .metric-value {
       font-size:22px;
       font-weight:700;
       color:var(--text);
       margin-bottom:8px;
     }
+
     .metric-row {
       display:flex;
       justify-content:space-between;
       align-items:flex-end;
       gap:8px;
     }
+
     .delta-chip {
       font-size:11px;
       font-weight:600;
@@ -192,6 +189,7 @@
     }
     .delta-chip.good { color:var(--green); background:#ecfdf5; }
     .delta-chip.bad { color:var(--red); background:#fff1f2; }
+
     .actual-row {
       margin-top:8px;
       padding-top:8px;
@@ -201,6 +199,7 @@
       align-items:center;
       gap:8px;
     }
+
     .small-muted { font-size:10px; color:var(--soft); }
     .small-strong { font-size:12px; font-weight:700; color:var(--muted); }
 
@@ -211,6 +210,7 @@
       gap:10px;
       margin-bottom:12px;
     }
+
     .pacing-banner {
       margin-bottom:12px;
       padding:10px 14px;
@@ -222,6 +222,7 @@
       justify-content:space-between;
       gap:10px;
     }
+
     .pacing-pill {
       display:inline-flex;
       align-items:center;
@@ -232,6 +233,7 @@
       border:1px solid var(--border);
       flex-shrink:0;
     }
+
     .pacing-pill-dot {
       width:7px;
       height:7px;
@@ -247,22 +249,27 @@
       margin-bottom:16px;
       flex-wrap:wrap;
     }
+
     .pill-group {
       display:flex;
       gap:8px;
       flex-wrap:wrap;
     }
+
     .toggle-wrap {
       display:flex;
       gap:4px;
       background:#f1f5f9;
       border-radius:8px;
       padding:3px;
+      flex-wrap:wrap;
     }
+
     .toggle-wrap.disabled {
       opacity:0.5;
       background:#f8fafc;
     }
+
     .toggle-btn {
       padding:5px 12px;
       border-radius:6px;
@@ -279,6 +286,7 @@
       box-shadow:0 1px 3px rgba(0,0,0,0.1);
     }
     .toggle-btn:disabled { cursor:not-allowed; }
+
     .metric-pill {
       padding:5px 13px;
       border-radius:20px;
@@ -298,17 +306,20 @@
       gap:8px;
       flex-wrap:wrap;
     }
+
     .legend-row {
       display:flex;
       gap:8px;
       flex-wrap:wrap;
     }
+
     .legend-item {
       display:flex;
       align-items:center;
       gap:5px;
       font-size:12px;
     }
+
     .legend-dot {
       width:10px;
       height:10px;
@@ -322,12 +333,14 @@
       gap:8px;
       margin-top:16px;
     }
+
     .share-card {
       background:#f8fafc;
       border-radius:10px;
       padding:10px 12px;
       border:1px solid var(--border-soft);
     }
+
     .share-title {
       display:flex;
       align-items:center;
@@ -337,6 +350,7 @@
       font-weight:600;
       color:var(--muted);
     }
+
     .share-value { font-size:18px; font-weight:700; color:var(--text); }
     .share-delta { font-size:11px; font-weight:600; margin-top:2px; }
     .share-delta.good { color:var(--green); }
@@ -351,6 +365,7 @@
       flex-direction:column;
       gap:12px;
     }
+
     .spinner {
       width:32px;
       height:32px;
@@ -365,6 +380,7 @@
     @media (max-width: 1023px) {
       .split-grid { grid-template-columns:1fr; }
     }
+
     @media (max-width: 639px) {
       .app { padding:12px; }
       .title { font-size:18px; }
@@ -377,6 +393,7 @@
     }
   </style>
 </head>
+
 <body>
   <div id="loading" class="loading">
     <div class="spinner"></div>
@@ -411,6 +428,7 @@
       <div class="tabs">
         <button class="tab-btn active" data-tab="overview">Overview</button>
         <button class="tab-btn" data-tab="trends">Trends</button>
+        <button class="tab-btn" data-tab="cohort">Cohort Growth Tracking</button>
       </div>
 
       <div id="overviewTab">
@@ -421,7 +439,9 @@
 
         <div id="pacingBanner" class="pacing-banner hidden">
           <div>
-            <div style="font-size:12px;font-weight:700;color:#111827;margin-bottom:2px;">Overview cards show pacing</div>
+            <div style="font-size:12px;font-weight:700;color:#111827;margin-bottom:2px;">
+              Overview cards show pacing
+            </div>
           </div>
           <div class="pacing-pill">
             <div class="pacing-pill-dot"></div>
@@ -469,6 +489,37 @@
 
         <div id="shareSummary" class="share-grid hidden"></div>
       </div>
+
+      <div id="cohortTab" class="hidden">
+        <div class="toolbar">
+          <div id="cohortMetricToggle" class="toggle-wrap">
+            <button class="toggle-btn active" data-cohort-metric="jobsPerListing">Jobs / Listing</button>
+            <button class="toggle-btn" data-cohort-metric="leadsPerListing">Leads / Listing</button>
+            <button class="toggle-btn" data-cohort-metric="revenuePerListing">Revenue / Listing</button>
+          </div>
+
+          <div id="cohortTimeToggle" class="toggle-wrap">
+            <button class="toggle-btn active" data-cohort-time="month">By Month Since Go-Live</button>
+            <button class="toggle-btn" data-cohort-time="quarter">By Quarter Since Go-Live</button>
+          </div>
+
+          <div id="cohortGroupToggle" class="toggle-wrap">
+            <button class="toggle-btn active" data-cohort-group="quarterly">Quarterly Cohort</button>
+            <button class="toggle-btn" data-cohort-group="monthly">Monthly Cohort</button>
+            <button class="toggle-btn" data-cohort-group="age">Listing Age</button>
+          </div>
+        </div>
+
+        <div class="card" style="margin-bottom:16px;">
+          <div class="chart-head">
+            <div id="cohortChartTitle" class="section-label" style="margin-bottom:0"></div>
+            <div id="cohortChartLegend" class="legend-row"></div>
+          </div>
+          <div id="cohortChartArea"></div>
+        </div>
+
+        <div id="cohortSummary" class="share-grid"></div>
+      </div>
     </div>
   </div>
 
@@ -492,10 +543,14 @@
     const CHANNEL_COLORS = { VIOC:"#f59e0b", CORE:"#6366f1", Core:"#6366f1", Vioc:"#f59e0b" };
 
     const FALLBACK = [
-      {Month:"2024-10-01T05:00:00.000Z",Week:"2024-09-30T05:00:00.000Z",Day:"2024-10-01T05:00:00.000Z",market:"Atlanta",channel:"VIOC",store:"IR1001",listing_age:"0-30 days",leads:8,jobs_booked:2,canceled_jobs:0,revenue:0,jobs_completed:1},
-      {Month:"2024-10-01T05:00:00.000Z",Week:"2024-09-30T05:00:00.000Z",Day:"2024-10-01T05:00:00.000Z",market:"Austin",channel:"CORE",store:"NB10001",listing_age:"31-60 days",leads:12,jobs_booked:4,canceled_jobs:0,revenue:0,jobs_completed:3},
-      {Month:"2024-10-01T05:00:00.000Z",Week:"2024-09-30T05:00:00.000Z",Day:"2024-10-01T05:00:00.000Z",market:"Dallas",channel:"VIOC",store:"IR1002",listing_age:"61-90 days",leads:8,jobs_booked:1,canceled_jobs:0,revenue:0,jobs_completed:0},
-      {Month:"2024-10-01T05:00:00.000Z",Week:"2024-09-30T05:00:00.000Z",Day:"2024-10-01T05:00:00.000Z",market:"Houston",channel:"CORE",store:"NB10002",listing_age:"90+ days",leads:9,jobs_booked:2,canceled_jobs:0,revenue:0,jobs_completed:1}
+      {date:"2026-04-26 0:00:00",market:"Atlanta",channel:"VIOC GBL",store_code:"NB40279",leads:0,jobs_booked:0,canceled_jobs:0,invoiced_customer_price:741,jobs_completed:1,"Listing Age":"3-6 months","Opening Month":"11/1/2025","Quarterly Cohort":"Q2","Monthly Cohort":"M6"},
+      {date:"2026-04-26 0:00:00",market:"Austin",channel:"VIOC GBL",store_code:"IR1131",leads:1,jobs_booked:1,canceled_jobs:0,invoiced_customer_price:0,jobs_completed:0,"Listing Age":"<3 months","Opening Month":"3/1/2026","Quarterly Cohort":"Q1","Monthly Cohort":"M2"},
+      {date:"2026-04-26 0:00:00",market:"Austin",channel:"VIOC GBL",store_code:"IR1099",leads:1,jobs_booked:1,canceled_jobs:0,invoiced_customer_price:0,jobs_completed:0,"Listing Age":"<3 months","Opening Month":"3/1/2026","Quarterly Cohort":"Q1","Monthly Cohort":"M2"},
+      {date:"2026-04-26 0:00:00",market:"Louisville",channel:"VIOC GBL",store_code:"NB40016",leads:1,jobs_booked:0,canceled_jobs:0,invoiced_customer_price:0,jobs_completed:0,"Listing Age":"<3 months","Opening Month":"4/1/2026","Quarterly Cohort":"Q1","Monthly Cohort":"M1"},
+      {date:"2026-04-26 0:00:00",market:"Dallas",channel:"VIOC GBL",store_code:"NB70094",leads:3,jobs_booked:1,canceled_jobs:0,invoiced_customer_price:0,jobs_completed:0,"Listing Age":">12 months","Opening Month":"1/1/2024","Quarterly Cohort":"Q10","Monthly Cohort":"M28"},
+      {date:"2026-04-26 0:00:00",market:"Nashville",channel:"VIOC GBL",store_code:"NB40118",leads:1,jobs_booked:0,canceled_jobs:0,invoiced_customer_price:0,jobs_completed:0,"Listing Age":">12 months","Opening Month":"1/1/2024","Quarterly Cohort":"Q10","Monthly Cohort":"M28"},
+      {date:"2026-04-26 0:00:00",market:"San Antonio",channel:"VIOC GBL",store_code:"IR5045",leads:0,jobs_booked:1,canceled_jobs:0,invoiced_customer_price:0,jobs_completed:0,"Listing Age":"<3 months","Opening Month":"3/1/2026","Quarterly Cohort":"Q1","Monthly Cohort":"M2"},
+      {date:"2026-04-26 0:00:00",market:"Houston",channel:"VIOC GBL",store_code:"NB70086",leads:1,jobs_booked:0,canceled_jobs:0,invoiced_customer_price:0,jobs_completed:0,"Listing Age":"3-6 months","Opening Month":"11/1/2025","Quarterly Cohort":"Q2","Monthly Cohort":"M6"}
     ];
 
     const state = {
@@ -512,15 +567,23 @@
       chartType: "line",
       trendView: "absolute",
       shareDim: "market",
-      ovMonth: ""
+      ovMonth: "",
+      cohortMetric: "jobsPerListing",
+      cohortTime: "month",
+      cohortGroup: "quarterly"
     };
 
     function el(id){ return document.getElementById(id); }
     function isRate(key){ return key.includes("Rate") || key === "aov"; }
     function sumK(arr,key){ return arr.reduce((a,r)=>a+(Number(r[key])||0),0); }
+
     function escapeHtml(str){
       return String(str).replace(/[&<>"']/g, s => ({
-        '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'
+        '&':'&amp;',
+        '<':'&lt;',
+        '>':'&gt;',
+        '"':'&quot;',
+        "'":'&#39;'
       }[s]));
     }
 
@@ -546,6 +609,7 @@
             canceled=sumK(rows,"canceled"),
             completed=sumK(rows,"completed"),
             revenue=sumK(rows,"revenue");
+
       return {
         leads, booked, canceled, completed, revenue,
         bookingRate: leads ? booked/leads : 0,
@@ -577,61 +641,52 @@
 
     function mapRows(d){
       return d.map(r => {
-        const channelRaw = firstVal(r,["channel","Channel","channel_category","Channel Category","channelCategory","source_channel","sourceChannel","lead_channel"],"GBL");
+        const channelRaw = firstVal(r,[
+          "channel","Channel","channel_category","Channel Category","channelCategory",
+          "source_channel","sourceChannel","lead_channel"
+        ],"GBL");
+
         const storeRaw = firstVal(r,[
-          "store",
-          "Store",
-          "store_name",
-          "storeName",
-          "Store Name",
-          "store_number",
-          "storeNumber",
-          "Store Number",
-          "storenumber",
-          "store_code",
-          "storeCode",
-          "Store Code",
-          "store_tag",
-          "storeTag",
-          "Store Tag",
-          "store_id",
-          "storeId",
-          "Store ID",
-          "listing",
-          "Listing",
-          "listing_name",
-          "listingName",
-          "Listing Name",
-          "listing_title",
-          "listingTitle",
-          "location",
-          "Location",
-          "location_name",
-          "locationName",
-          "Location Name",
-          "gbp_name",
-          "gbpName",
-          "GBP Name",
-          "gmb_name",
-          "gmbName",
-          "GMB Name",
-          "business_name",
-          "businessName",
-          "Business Name",
-          "google_business_location",
-          "googleBusinessLocation",
-          "Google Business Location"
+          "store","Store","store_name","storeName","Store Name",
+          "store_number","storeNumber","Store Number","storenumber",
+          "store_code","storeCode","Store Code",
+          "store_tag","storeTag","Store Tag",
+          "store_id","storeId","Store ID",
+          "listing","Listing","listing_name","listingName","Listing Name",
+          "listing_title","listingTitle",
+          "location","Location","location_name","locationName","Location Name",
+          "gbp_name","gbpName","GBP Name",
+          "gmb_name","gmbName","GMB Name",
+          "business_name","businessName","Business Name",
+          "google_business_location","googleBusinessLocation","Google Business Location"
         ],"Unmapped Store");
-        const listingAgeRaw = firstVal(r,["listing_age","listingAge","listing_age_bucket","listingAgeBucket","Listing Age","Listing Age Bucket","age_bucket","ageBucket"],"Unmapped Listing Age");
+
+        const listingAgeRaw = firstVal(r,[
+          "listing_age","listingAge","listing_age_bucket","listingAgeBucket",
+          "Listing Age","Listing Age Bucket","age_bucket","ageBucket"
+        ],"Unmapped Listing Age");
+
+        const dateRaw = normDate(firstVal(r,["date","Date","Day","day","Month","month"],""));
 
         return {
-          date:  normDate(firstVal(r,["date","Date","Day","day","Month","month"],"")),
-          Week:  getWeekStart(normDate(firstVal(r,["Week","week","date","Date","Day","day"],""))),
+          date: dateRaw,
+          Week: getWeekStart(normDate(firstVal(r,["Week","week","date","Date","Day","day"],""))),
           Month: getMonthStart(normDate(firstVal(r,["Month","month","date","Date","Day","day"],""))),
           market: String(firstVal(r,["market","Market"],"Unmapped Market")).trim() || "Unmapped Market",
           channel: normalizeChannel(channelRaw),
           store: String(storeRaw).trim() || "Unmapped Store",
           listingAge: String(listingAgeRaw).trim() || "Unmapped Listing Age",
+          openingMonth: normDate(firstVal(r,[
+            "Opening Month","opening_month","openingMonth",
+            "go_live_date","goLiveDate","Go Live Date",
+            "go_live_month","goLiveMonth","Go Live Month"
+          ],"")),
+          quarterlyCohort: String(firstVal(r,[
+            "Quarterly Cohort","quarterly_cohort","quarterlyCohort"
+          ],"")).trim(),
+          monthlyCohort: String(firstVal(r,[
+            "Monthly Cohort","monthly_cohort","monthlyCohort"
+          ],"")).trim(),
           leads: Number(firstVal(r,["leads","Leads"],0)) || 0,
           booked: Number(firstVal(r,["jobs_booked","booked","Bookings","bookings","jobsBooked"],0)) || 0,
           canceled: Number(firstVal(r,["canceled_jobs","canceled","Canceled Jobs","cancelled_jobs","cancelledJobs"],0)) || 0,
@@ -659,7 +714,6 @@
     }
 
     function sod(d){ return new Date(d.getFullYear(), d.getMonth(), d.getDate()); }
-
     function getRowDate(r){ return toDS(r.date || r.Week || r.Month); }
 
     function getPeriodStartDate(pk,period){
@@ -671,11 +725,13 @@
     function getPeriodEndDate(pk,period){
       const s = getPeriodStartDate(pk,period);
       if(!s) return null;
+
       if(period==="week"){
         const e = new Date(s);
         e.setDate(e.getDate()+6);
         return e;
       }
+
       if(period==="month") return new Date(s.getFullYear(), s.getMonth()+1, 0);
       return null;
     }
@@ -774,42 +830,80 @@
       return { elapsed:sumArr(curElapsed), total:sumArr(curFull), pct:hp, historicalPct:hp, projected:proj, actual:curActual, method:"weekday_weighted_historical", sampleSize:shares.length };
     }
 
-    function getProjVal(key,val,pacing){ return (!pacing || key.includes("Rate") || key==="aov") ? val : (pacing.projected ?? val); }
+    function getProjVal(key,val,pacing){
+      return (!pacing || key.includes("Rate") || key==="aov") ? val : (pacing.projected ?? val);
+    }
 
     function buildTimeSeries(rows,period){
       const g={};
+
       rows.forEach(r=>{
-        const k = period==="day" ? (r.date||"").slice(0,10) : period==="week" ? (r.Week||"").slice(0,10) : (r.Month||"").slice(0,7);
+        const k = period==="day"
+          ? (r.date||"").slice(0,10)
+          : period==="week"
+            ? (r.Week||"").slice(0,10)
+            : (r.Month||"").slice(0,7);
+
         if(!k) return;
         if(!g[k]) g[k]=[];
         g[k].push(r);
       });
 
       return Object.keys(g).sort().slice(period==="day" ? -60 : -12).map(k=>{
-        const a=g[k], leads=sumK(a,"leads"), booked=sumK(a,"booked"), canceled=sumK(a,"canceled"), completed=sumK(a,"completed"), revenue=sumK(a,"revenue");
-        return { label:k, leads, booked, canceled, completed, revenue, bookingRate: leads ? booked/leads : 0, cancelRate: (canceled+completed) ? canceled/(canceled+completed) : 0, conversionRate: leads ? completed/leads : 0, aov: completed ? revenue/completed : 0 };
+        const a=g[k],
+              leads=sumK(a,"leads"),
+              booked=sumK(a,"booked"),
+              canceled=sumK(a,"canceled"),
+              completed=sumK(a,"completed"),
+              revenue=sumK(a,"revenue");
+
+        return {
+          label:k,
+          leads,
+          booked,
+          canceled,
+          completed,
+          revenue,
+          bookingRate: leads ? booked/leads : 0,
+          cancelRate: (canceled+completed) ? canceled/(canceled+completed) : 0,
+          conversionRate: leads ? completed/leads : 0,
+          aov: completed ? revenue/completed : 0
+        };
       });
     }
 
     function buildGroupedShareSeries(rows,period,metricKey,groupKey){
-      const tk = r => period==="day" ? (r.date||"").slice(0,10) : period==="week" ? (r.Week||"").slice(0,10) : (r.Month||"").slice(0,7);
+      const tk = r => period==="day"
+        ? (r.date||"").slice(0,10)
+        : period==="week"
+          ? (r.Week||"").slice(0,10)
+          : (r.Month||"").slice(0,7);
+
       const allKeys=[...new Set(rows.map(tk).filter(Boolean))].sort().slice(period==="day" ? -60 : -12);
       const groups=[...new Set(rows.map(r=>r[groupKey]).filter(Boolean))].sort();
+
       const rawMap={};
-      allKeys.forEach(t=>{ rawMap[t]={}; groups.forEach(g=>{ rawMap[t][g]=[]; }); });
+      allKeys.forEach(t=>{
+        rawMap[t]={};
+        groups.forEach(g=>{ rawMap[t][g]=[]; });
+      });
+
       rows.forEach(r=>{
         const t=tk(r), g=r[groupKey];
         if(t && g && rawMap[t] && rawMap[t][g]) rawMap[t][g].push(r);
       });
+
       return {
         series: allKeys.map(t=>{
           const pt={label:t};
           const ta=aggregate(Object.values(rawMap[t]).flat());
           const tv=ta[metricKey]||0;
+
           groups.forEach(g=>{
             const ga=aggregate(rawMap[t][g]||[]);
             pt[g]=tv>0 ? (ga[metricKey]/tv)*100 : 0;
           });
+
           return pt;
         }),
         groups
@@ -825,7 +919,7 @@
 
     function seriesColor(label,dim){
       if(dim==="channel") return CHANNEL_COLORS[label] || "#94a3b8";
-      const p=["#2563eb","#7c3aed","#0ea5e9","#10b981","#f59e0b","#ef4444","#14b8a6","#8b5cf6"];
+      const p=["#2563eb","#7c3aed","#0ea5e9","#10b981","#f59e0b","#ef4444","#14b8a6","#8b5cf6","#64748b","#d946ef","#84cc16","#f97316"];
       let h=0, s=String(label||"");
       for(let i=0;i<s.length;i++) h=(h*31+s.charCodeAt(i))>>>0;
       return p[h % p.length];
@@ -848,10 +942,19 @@
       );
     }
 
-    function getOvMonthOpts(filtered){ return [...new Set(filtered.map(r => (r.Month||"").slice(0,7)).filter(Boolean))].sort(); }
-    function getRowsForLabel(filtered, label){ return filtered.filter(r => getPeriodKey(r,state.period) === label); }
+    function getOvMonthOpts(filtered){
+      return [...new Set(filtered.map(r => (r.Month||"").slice(0,7)).filter(Boolean))].sort();
+    }
+
+    function getRowsForLabel(filtered, label){
+      return filtered.filter(r => getPeriodKey(r,state.period) === label);
+    }
+
     function pct(c,p){ return p ? ((c-p)/p)*100 : 0; }
-    function getPeriodLabel(){ return state.period==="day" ? "Last 60 Days" : state.period==="week" ? "Last 12 Weeks" : "Last 12 Months"; }
+
+    function getPeriodLabel(){
+      return state.period==="day" ? "Last 60 Days" : state.period==="week" ? "Last 12 Weeks" : "Last 12 Months";
+    }
 
     function optionList(label, values, selected){
       return [label, ...values].map(v => `<option value="${escapeHtml(v)}" ${selected===v ? 'selected' : ''}>${escapeHtml(v)}</option>`).join('');
@@ -888,9 +991,11 @@
 
       const filtered = getFiltered();
       const ovMonthOpts = getOvMonthOpts(filtered);
+
       if (ovMonthOpts.length && (!state.ovMonth || !ovMonthOpts.includes(state.ovMonth))) {
         state.ovMonth = ovMonthOpts[ovMonthOpts.length - 1];
       }
+
       if (!ovMonthOpts.length) state.ovMonth = '';
 
       el('monthSelect').innerHTML = ovMonthOpts
@@ -902,11 +1007,15 @@
       const ovLabel = (() => {
         if(!series.length) return '';
         const ll = series[series.length-1].label;
+
         if(state.period==='day') return new Date(ll+'T12:00:00').toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'});
+
         if(state.period==='week'){
-          const s=new Date(ll+'T12:00:00'), e=new Date(s); e.setDate(e.getDate()+6);
+          const s=new Date(ll+'T12:00:00'), e=new Date(s);
+          e.setDate(e.getDate()+6);
           return s.toLocaleDateString('en-US',{month:'short',day:'numeric'}) + ' – ' + e.toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'});
         }
+
         return new Date(ll+'-01T12:00:00').toLocaleDateString('en-US',{month:'long',year:'numeric'});
       })();
 
@@ -918,29 +1027,43 @@
         state.listingAge === 'All Listing Ages' ? 'All Listing Ages' : state.listingAge,
         state.tab === 'overview'
           ? (state.period === 'month' && state.ovMonth ? new Date(state.ovMonth+'-01T12:00:00').toLocaleDateString('en-US',{month:'long',year:'numeric'}) : ovLabel)
-          : getPeriodLabel()
+          : state.tab === 'cohort'
+            ? 'Cohort Growth Tracking'
+            : getPeriodLabel()
       ];
+
       el('subtitle').textContent = parts.join(' · ');
 
       const badge = el('dataBadge'), badgeText = el('dataBadgeText'), fallbackNote = el('fallbackNote');
+
       if (state.fallback) {
-        badge.className = 'badge sample'; badgeText.textContent = 'Sample Data'; fallbackNote.classList.remove('hidden');
+        badge.className = 'badge sample';
+        badgeText.textContent = 'Sample Data';
+        fallbackNote.classList.remove('hidden');
       } else {
-        badge.className = 'badge live'; badgeText.textContent = 'Live Data'; fallbackNote.classList.add('hidden');
+        badge.className = 'badge live';
+        badgeText.textContent = 'Live Data';
+        fallbackNote.classList.add('hidden');
       }
     }
 
     function renderControls(){
       document.querySelectorAll('.period-btn').forEach(btn => btn.classList.toggle('active', btn.dataset.period === state.period));
       document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.toggle('active', btn.dataset.tab === state.tab));
+
       el('overviewTab').classList.toggle('hidden', state.tab !== 'overview');
       el('trendsTab').classList.toggle('hidden', state.tab !== 'trends');
+      el('cohortTab').classList.toggle('hidden', state.tab !== 'cohort');
     }
 
     function renderOverview(filtered, series){
       const latestMonth = getLatestMonthKey(filtered);
       const ovRows = filtered.filter(r => (r.Month||'').slice(0,7) === (state.ovMonth || latestMonth));
-      const curr = state.period==='month' ? aggregate(ovRows) : (series.length ? aggregate(getRowsForLabel(filtered, series[series.length-1].label)) : {});
+
+      const curr = state.period==='month'
+        ? aggregate(ovRows)
+        : (series.length ? aggregate(getRowsForLabel(filtered, series[series.length-1].label)) : {});
+
       const prev = (() => {
         if(state.period==='month'){
           const mk=[...new Set(filtered.map(r=>(r.Month||'').slice(0,7)).filter(Boolean))].sort();
@@ -949,20 +1072,39 @@
           if(!pk) return {};
           return aggregate(filtered.filter(r => (r.Month||'').slice(0,7)===pk));
         }
+
         if(series.length<2) return {};
         return aggregate(getRowsForLabel(filtered, series[series.length-2].label));
       })();
 
       const pacing = {};
       const isLatest = state.ovMonth === latestMonth;
-      METRICS.forEach(m => { pacing[m.key] = state.period !== 'month' ? calcHistoricalPacing(state.period, filtered, m.key) : (filtered.length && isLatest ? calcHistoricalPacing(state.period, filtered, m.key) : null); });
+
+      METRICS.forEach(m => {
+        pacing[m.key] = state.period !== 'month'
+          ? calcHistoricalPacing(state.period, filtered, m.key)
+          : (filtered.length && isLatest ? calcHistoricalPacing(state.period, filtered, m.key) : null);
+      });
 
       el('monthRow').classList.toggle('hidden', state.period !== 'month');
-      el('monthLabel').textContent = 'Selected month: ' + (state.ovMonth ? new Date(state.ovMonth+'-01T12:00:00').toLocaleDateString('en-US',{month:'long',year:'numeric'}) : 'Current Month');
+
+      el('monthLabel').textContent = 'Selected month: ' + (
+        state.ovMonth
+          ? new Date(state.ovMonth+'-01T12:00:00').toLocaleDateString('en-US',{month:'long',year:'numeric'})
+          : 'Current Month'
+      );
+
       el('pacingBanner').classList.toggle('hidden', !(pacing.leads && ['week','month'].includes(state.period)));
 
       el('kpiGrid').innerHTML = METRICS.map(m => {
-        const actual = curr[m.key] || 0, pac = pacing[m.key] || null, pv = getProjVal(m.key, actual, pac), prior = prev[m.key] || 0, dv = pac && !isRate(m.key) ? pv : actual, chg = pct(dv, prior), good = m.invert ? chg <= 0 : chg >= 0;
+        const actual = curr[m.key] || 0,
+              pac = pacing[m.key] || null,
+              pv = getProjVal(m.key, actual, pac),
+              prior = prev[m.key] || 0,
+              dv = pac && !isRate(m.key) ? pv : actual,
+              chg = pct(dv, prior),
+              good = m.invert ? chg <= 0 : chg >= 0;
+
         return `
           <div class="card tight">
             <div class="section-label">${escapeHtml(m.label)}</div>
@@ -982,42 +1124,148 @@
     function renderSparkline(data, metricKey, color, pacing){
       const isR = metricKey.includes('Rate') || metricKey==='aov';
       const vals = data.map((d,i)=> i===data.length-1 && pacing && !isR ? (pacing.projected ?? d[metricKey] ?? 0) : (d[metricKey]||0));
+
       if(vals.length<2) return '';
+
       const mn=Math.min(...vals), mx=Math.max(...vals), rng=mx-mn || 1, w=80, h=28;
       const pts = vals.map((v,i)=>`${((i/(vals.length-1))*w).toFixed(1)},${(h-((v-mn)/rng)*h).toFixed(1)}`).join(' ');
+
       return `<svg width="80" height="28" aria-hidden="true"><polyline points="${pts}" fill="none" stroke="${color}" stroke-width="1.5" stroke-linejoin="round"></polyline></svg>`;
     }
 
     function renderFunnelCard(curr, prev, period, pacing){
-      const steps=[{key:'leads',label:'Leads',color:'#6366f1'},{key:'booked',label:'Booked',color:'#0ea5e9'},{key:'completed',label:'Completed',color:'#10b981'}];
-      const pc = { leads:getProjVal('leads',curr.leads||0,pacing.leads), booked:getProjVal('booked',curr.booked||0,pacing.booked), completed:getProjVal('completed',curr.completed||0,pacing.completed) };
-      const maxV=Math.max(pc.leads||1,1), pl=period==='day' ? 'day' : period==='week' ? 'week' : 'month';
-      return `<div class="card" style="padding:16px 18px 20px;"><div class="section-label" style="font-size:11px;margin-bottom:16px;">Conversion Funnel — Projected Current ${pl}</div><div style="display:flex;flex-direction:column;gap:6px;">${steps.map(s=>{
-        const val=pc[s.key]||0, pw=maxV ? val/maxV : 0, pv=prev[s.key]||0, pol=pc.leads>0 && s.key!=='leads' ? ((val/pc.leads)*100).toFixed(1) : null, chg=pv ? ((val-pv)/pv)*100 : 0, good=chg>=0;
-        return `<div><div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:5px;gap:8px;flex-wrap:wrap;"><div style="display:flex;align-items:center;gap:8px;"><div style="width:8px;height:8px;border-radius:50%;background:${s.color};flex-shrink:0;"></div><span style="font-size:13px;font-weight:700;color:#111827;">${s.label}</span>${pol!==null ? `<span style="font-size:11px;color:#9ca3af;margin-left:2px;">(${pol}% of Leads)</span>` : ''}</div><div style="display:flex;align-items:center;gap:8px;"><span style="font-size:13px;font-weight:700;color:#111827;">${Math.round(val).toLocaleString()}</span>${pv>0 ? `<span class="delta-chip ${good ? 'good' : 'bad'}">${good ? '▲' : '▼'}${Math.abs(chg).toFixed(1)}%</span>` : ''}</div></div><div style="position:relative;height:10px;background:#f1f5f9;border-radius:6px;overflow:hidden;"><div style="position:absolute;left:0;top:0;height:100%;width:${pw*100}%;background:${s.color};border-radius:6px;"></div>${pv>0 ? `<div style="position:absolute;left:0;top:0;height:100%;width:${(maxV ? pv/maxV : 0)*100}%;background:none;border-right:2px dashed ${s.color};opacity:0.4;"></div>` : ''}</div></div>`;
-      }).join('')}</div></div>`;
+      const steps=[
+        {key:'leads',label:'Leads',color:'#6366f1'},
+        {key:'booked',label:'Booked',color:'#0ea5e9'},
+        {key:'completed',label:'Completed',color:'#10b981'}
+      ];
+
+      const pc = {
+        leads:getProjVal('leads',curr.leads||0,pacing.leads),
+        booked:getProjVal('booked',curr.booked||0,pacing.booked),
+        completed:getProjVal('completed',curr.completed||0,pacing.completed)
+      };
+
+      const maxV=Math.max(pc.leads||1,1);
+      const pl=period==='day' ? 'day' : period==='week' ? 'week' : 'month';
+
+      return `
+        <div class="card" style="padding:16px 18px 20px;">
+          <div class="section-label" style="font-size:11px;margin-bottom:16px;">
+            Conversion Funnel — Projected Current ${pl}
+          </div>
+          <div style="display:flex;flex-direction:column;gap:6px;">
+            ${steps.map(s=>{
+              const val=pc[s.key]||0,
+                    pw=maxV ? val/maxV : 0,
+                    pv=prev[s.key]||0,
+                    pol=pc.leads>0 && s.key!=='leads' ? ((val/pc.leads)*100).toFixed(1) : null,
+                    chg=pv ? ((val-pv)/pv)*100 : 0,
+                    good=chg>=0;
+
+              return `
+                <div>
+                  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:5px;gap:8px;flex-wrap:wrap;">
+                    <div style="display:flex;align-items:center;gap:8px;">
+                      <div style="width:8px;height:8px;border-radius:50%;background:${s.color};flex-shrink:0;"></div>
+                      <span style="font-size:13px;font-weight:700;color:#111827;">${s.label}</span>
+                      ${pol!==null ? `<span style="font-size:11px;color:#9ca3af;margin-left:2px;">(${pol}% of Leads)</span>` : ''}
+                    </div>
+                    <div style="display:flex;align-items:center;gap:8px;">
+                      <span style="font-size:13px;font-weight:700;color:#111827;">${Math.round(val).toLocaleString()}</span>
+                      ${pv>0 ? `<span class="delta-chip ${good ? 'good' : 'bad'}">${good ? '▲' : '▼'}${Math.abs(chg).toFixed(1)}%</span>` : ''}
+                    </div>
+                  </div>
+                  <div style="position:relative;height:10px;background:#f1f5f9;border-radius:6px;overflow:hidden;">
+                    <div style="position:absolute;left:0;top:0;height:100%;width:${pw*100}%;background:${s.color};border-radius:6px;"></div>
+                    ${pv>0 ? `<div style="position:absolute;left:0;top:0;height:100%;width:${(maxV ? pv/maxV : 0)*100}%;background:none;border-right:2px dashed ${s.color};opacity:0.4;"></div>` : ''}
+                  </div>
+                </div>`;
+            }).join('')}
+          </div>
+        </div>`;
     }
 
     function renderComparisonCard(curr, prev, period, pacing){
-      const KPIs=[{key:'leads',label:'Leads',color:'#6366f1'},{key:'booked',label:'Bookings',color:'#0ea5e9'},{key:'completed',label:'Completed',color:'#10b981'},{key:'bookingRate',label:'Book Rate',color:'#8b5cf6'},{key:'conversionRate',label:'Conv. Rate',color:'#14b8a6'}];
+      const KPIs=[
+        {key:'leads',label:'Leads',color:'#6366f1'},
+        {key:'booked',label:'Bookings',color:'#0ea5e9'},
+        {key:'completed',label:'Completed',color:'#10b981'},
+        {key:'bookingRate',label:'Book Rate',color:'#8b5cf6'},
+        {key:'conversionRate',label:'Conv. Rate',color:'#14b8a6'}
+      ];
+
       const pl=period==='day' ? 'day' : period==='week' ? 'week' : 'month';
       const W=560,H=220,pL=16,pR=16,pT=16,pB=32,cW=W-pL-pR,cH=H-pT-pB,n=KPIs.length,gW=cW/n,bW=Math.min(gW*0.32,22),gap=bW*0.6,xC=i=>pL+i*gW+gW/2;
-      return `<div class="card" style="padding:16px 18px 20px;"><div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;flex-wrap:wrap;gap:8px;"><div class="section-label" style="font-size:11px;margin-bottom:0;">Projected Current vs Prior Period — Core KPIs</div><div style="display:flex;gap:14px;font-size:11px;flex-wrap:wrap;"><span style="display:flex;align-items:center;gap:5px;"><span style="width:10px;height:10px;border-radius:2px;background:#6366f1;display:inline-block"></span><span style="color:#6b7280;font-weight:600;">Projected current ${pl}</span></span><span style="display:flex;align-items:center;gap:5px;"><span style="width:10px;height:10px;border-radius:2px;background:#e5e7eb;border:1.5px dashed #9ca3af;display:inline-block"></span><span style="color:#9ca3af;font-weight:600;">Prior ${pl}</span></span></div></div><svg viewBox="0 0 ${W} ${H}" style="width:100%;height:auto;">${[0,0.5,1].map(t => `<line x1="${pL}" x2="${W-pR}" y1="${pT+cH*(1-t)}" y2="${pT+cH*(1-t)}" stroke="#f1f5f9" stroke-width="1"></line>`).join('')}${KPIs.map((kpi,i)=>{
-        const cx=xC(i), cv=getProjVal(kpi.key,curr[kpi.key]||0,pacing[kpi.key]), pv=prev[kpi.key]||0, lm=Math.max(cv,pv,1), ch2=Math.max((cv/lm)*cH,0), ph2=Math.max((pv/lm)*cH,0), cy=pT+cH-ch2, py=pT+cH-ph2, chg=pv ? ((cv-pv)/pv)*100 : 0, good=chg>=0;
-        return `<g><rect x="${cx-gap/2-bW}" y="${py}" width="${bW}" height="${ph2}" rx="3" fill="#e5e7eb" opacity="0.8"></rect><rect x="${cx+gap/2}" y="${cy}" width="${bW}" height="${ch2}" rx="3" fill="${kpi.color}" opacity="0.9"></rect><text x="${cx}" y="${H-4}" text-anchor="middle" font-size="9" fill="#9ca3af">${kpi.label}</text>${pv>0 ? `<text x="${cx}" y="${Math.min(cy,py)-5}" text-anchor="middle" font-size="8.5" fill="${good?'#10b981':'#f43f5e'}" font-weight="700">${good?'▲':'▼'}${Math.abs(chg).toFixed(1)}%</text>` : ''}</g>`;
-      }).join('')}</svg></div>`;
+
+      return `
+        <div class="card" style="padding:16px 18px 20px;">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;flex-wrap:wrap;gap:8px;">
+            <div class="section-label" style="font-size:11px;margin-bottom:0;">
+              Projected Current vs Prior Period — Core KPIs
+            </div>
+            <div style="display:flex;gap:14px;font-size:11px;flex-wrap:wrap;">
+              <span style="display:flex;align-items:center;gap:5px;">
+                <span style="width:10px;height:10px;border-radius:2px;background:#6366f1;display:inline-block"></span>
+                <span style="color:#6b7280;font-weight:600;">Projected current ${pl}</span>
+              </span>
+              <span style="display:flex;align-items:center;gap:5px;">
+                <span style="width:10px;height:10px;border-radius:2px;background:#e5e7eb;border:1.5px dashed #9ca3af;display:inline-block"></span>
+                <span style="color:#9ca3af;font-weight:600;">Prior ${pl}</span>
+              </span>
+            </div>
+          </div>
+
+          <svg viewBox="0 0 ${W} ${H}" style="width:100%;height:auto;">
+            ${[0,0.5,1].map(t => `<line x1="${pL}" x2="${W-pR}" y1="${pT+cH*(1-t)}" y2="${pT+cH*(1-t)}" stroke="#f1f5f9" stroke-width="1"></line>`).join('')}
+            ${KPIs.map((kpi,i)=>{
+              const cx=xC(i),
+                    cv=getProjVal(kpi.key,curr[kpi.key]||0,pacing[kpi.key]),
+                    pv=prev[kpi.key]||0,
+                    lm=Math.max(cv,pv,1),
+                    ch2=Math.max((cv/lm)*cH,0),
+                    ph2=Math.max((pv/lm)*cH,0),
+                    cy=pT+cH-ch2,
+                    py=pT+cH-ph2,
+                    chg=pv ? ((cv-pv)/pv)*100 : 0,
+                    good=chg>=0;
+
+              return `
+                <g>
+                  <rect x="${cx-gap/2-bW}" y="${py}" width="${bW}" height="${ph2}" rx="3" fill="#e5e7eb" opacity="0.8"></rect>
+                  <rect x="${cx+gap/2}" y="${cy}" width="${bW}" height="${ch2}" rx="3" fill="${kpi.color}" opacity="0.9"></rect>
+                  <text x="${cx}" y="${H-4}" text-anchor="middle" font-size="9" fill="#9ca3af">${kpi.label}</text>
+                  ${pv>0 ? `<text x="${cx}" y="${Math.min(cy,py)-5}" text-anchor="middle" font-size="8.5" fill="${good?'#10b981':'#f43f5e'}" font-weight="700">${good?'▲':'▼'}${Math.abs(chg).toFixed(1)}%</text>` : ''}
+                </g>`;
+            }).join('')}
+          </svg>
+        </div>`;
     }
 
     function renderTrends(filtered, series){
-      const metricToolbar = el('metricToolbar'), chartTitle = el('chartTitle'), chartLegend = el('chartLegend'), chartArea = el('chartArea'), shareSummary = el('shareSummary'), shareDimToggle = el('shareDimToggle'), trendViewToggle = el('trendViewToggle');
+      const metricToolbar = el('metricToolbar'),
+            chartTitle = el('chartTitle'),
+            chartLegend = el('chartLegend'),
+            chartArea = el('chartArea'),
+            shareSummary = el('shareSummary'),
+            shareDimToggle = el('shareDimToggle'),
+            trendViewToggle = el('trendViewToggle');
+
       const shareBlocked = SHARE_INCOMPATIBLE.has(state.trendKey);
       if(shareBlocked && state.trendView==='share') state.trendView='absolute';
 
-      metricToolbar.innerHTML = METRICS.map(m => `<button class="metric-pill" data-metric="${m.key}" style="${state.trendKey===m.key ? `border-color:${m.color};background:${m.color};color:#fff;` : ''}">${escapeHtml(m.label)}</button>`).join('');
+      metricToolbar.innerHTML = METRICS.map(m => `
+        <button class="metric-pill" data-metric="${m.key}" style="${state.trendKey===m.key ? `border-color:${m.color};background:${m.color};color:#fff;` : ''}">
+          ${escapeHtml(m.label)}
+        </button>
+      `).join('');
+
       document.querySelectorAll('#chartTypeToggle .toggle-btn').forEach(btn => btn.classList.toggle('active', btn.dataset.chart === state.chartType));
       document.querySelectorAll('#trendViewToggle .toggle-btn').forEach(btn => btn.classList.toggle('active', btn.dataset.view === state.trendView));
+
       trendViewToggle.classList.toggle('disabled', shareBlocked);
       shareDimToggle.classList.toggle('hidden', state.trendView !== 'share');
+
       document.querySelectorAll('#shareDimToggle .toggle-btn').forEach(btn => btn.classList.toggle('active', btn.dataset.shareDim === state.shareDim));
 
       const selM = METRICS.find(m=>m.key===state.trendKey) || METRICS[0];
@@ -1032,14 +1280,39 @@
         shareSummary.classList.add('hidden');
         shareSummary.innerHTML = '';
       } else {
-        const dimLabel = state.shareDim === 'listingAge' ? 'Listing Age' : state.shareDim.charAt(0).toUpperCase() + state.shareDim.slice(1);
+        const dimLabel = state.shareDim === 'listingAge'
+          ? 'Listing Age'
+          : state.shareDim.charAt(0).toUpperCase() + state.shareDim.slice(1);
+
         chartTitle.textContent = selM.label + ' Share — By ' + dimLabel;
-        chartLegend.innerHTML = activeGroups.map(g => `<div class="legend-item"><div class="legend-dot" style="background:${seriesColor(g,state.shareDim)}"></div><span style="color:#6b7280;font-weight:600;">${escapeHtml(g)}</span></div>`).join('');
+
+        chartLegend.innerHTML = activeGroups.map(g => `
+          <div class="legend-item">
+            <div class="legend-dot" style="background:${seriesColor(g,state.shareDim)}"></div>
+            <span style="color:#6b7280;font-weight:600;">${escapeHtml(g)}</span>
+          </div>
+        `).join('');
+
         chartArea.innerHTML = renderShareChart(grouped.series, grouped.groups, state.period, state.shareDim);
+
         shareSummary.classList.toggle('hidden', activeGroups.length===0);
+
         shareSummary.innerHTML = activeGroups.map(g=>{
-          const vs=grouped.series.map(d=>d[g]||0), lt=vs.length ? vs[vs.length-1] : 0, pr=vs.length>1 ? vs[vs.length-2] : 0, chg=pr ? ((lt-pr)/pr)*100 : 0, good=chg>=0;
-          return `<div class="share-card"><div class="share-title"><div class="legend-dot" style="width:8px;height:8px;background:${seriesColor(g,state.shareDim)}"></div><span>${escapeHtml(g)}</span></div><div class="share-value">${lt.toFixed(1)}%</div><div class="share-delta ${good?'good':'bad'}">${good?'▲':'▼'}${Math.abs(chg).toFixed(1)}% vs prior</div></div>`;
+          const vs=grouped.series.map(d=>d[g]||0),
+                lt=vs.length ? vs[vs.length-1] : 0,
+                pr=vs.length>1 ? vs[vs.length-2] : 0,
+                chg=pr ? ((lt-pr)/pr)*100 : 0,
+                good=chg>=0;
+
+          return `
+            <div class="share-card">
+              <div class="share-title">
+                <div class="legend-dot" style="width:8px;height:8px;background:${seriesColor(g,state.shareDim)}"></div>
+                <span>${escapeHtml(g)}</span>
+              </div>
+              <div class="share-value">${lt.toFixed(1)}%</div>
+              <div class="share-delta ${good?'good':'bad'}">${good?'▲':'▼'}${Math.abs(chg).toFixed(1)}% vs prior</div>
+            </div>`;
         }).join('');
       }
     }
@@ -1047,59 +1320,521 @@
     function renderTrendChart(data, metricKey, metric, period, chartType, pacing){
       const isR = metricKey.includes('Rate') || metricKey==='aov';
       const hasProj = pacing && !isR && ['week','month'].includes(period);
+
       const vals = data.map((d,i)=> {
         const raw = Number(d[metricKey]) || 0;
         return i===data.length-1 && hasProj ? (pacing.projected ?? raw) : raw;
       });
+
       const actuals=data.map(d=>Number(d[metricKey])||0);
       if(!vals.length) return '<div class="small-muted">No data available.</div>';
-      const fy=v=>metricKey.includes('Rate') ? (v*100).toFixed(0)+'%' : Math.abs(v)>=1000 ? (v/1000).toFixed(1)+'k' : Math.round(v)+'';
+
+      const fy=v=>metricKey.includes('Rate')
+        ? (v*100).toFixed(0)+'%'
+        : Math.abs(v)>=1000 ? (v/1000).toFixed(1)+'k' : Math.round(v)+'';
+
       const mn=Math.min(...vals), mx=Math.max(...vals);
       let yMin=0, yMax=mx||1;
+
       if(metricKey.includes('Rate')){
-        const rng=Math.max(mx-mn,0.01), pad=rng*0.18; yMin=Math.max(0,mn-pad); yMax=Math.min(1,mx+pad);
-        if(yMax-yMin<0.04){ const mid=(yMax+yMin)/2; yMin=Math.max(0,mid-0.02); yMax=Math.min(1,mid+0.02); }
+        const rng=Math.max(mx-mn,0.01), pad=rng*0.18;
+        yMin=Math.max(0,mn-pad);
+        yMax=Math.min(1,mx+pad);
+
+        if(yMax-yMin<0.04){
+          const mid=(yMax+yMin)/2;
+          yMin=Math.max(0,mid-0.02);
+          yMax=Math.min(1,mid+0.02);
+        }
       } else {
-        const rng=Math.max(mx-mn,Math.abs(mx)*0.08,1), pad=rng*0.18; yMin=mx>0 && mn/mx<0.65 ? 0 : Math.max(0,mn-pad); yMax=mx+pad; if(yMax<=yMin) yMax=yMin+1;
+        const rng=Math.max(mx-mn,Math.abs(mx)*0.08,1), pad=rng*0.18;
+        yMin=mx>0 && mn/mx<0.65 ? 0 : Math.max(0,mn-pad);
+        yMax=mx+pad;
+        if(yMax<=yMin) yMax=yMin+1;
       }
-      const W=680,H=250,pL=64,pB=44,pT=18,pR=18,cW=W-pL-pR,cH=H-pB-pT,li=vals.length-1,bW=Math.min(cW/Math.max(vals.length,1)-4,28),step=Math.ceil(vals.length/10),yRng=yMax-yMin||1,xP=i=>pL+(vals.length===1 ? cW/2 : (i/(vals.length-1))*cW),yP=v=>pT+cH-((v-yMin)/yRng)*cH,ticks=Array.from({length:5},(_,i)=>yMin+(yRng*i)/4);
+
+      const W=680,H=250,pL=64,pB=44,pT=18,pR=18,cW=W-pL-pR,cH=H-pB-pT,li=vals.length-1,bW=Math.min(cW/Math.max(vals.length,1)-4,28),step=Math.ceil(vals.length/10),yRng=yMax-yMin||1;
+      const xP=i=>pL+(vals.length===1 ? cW/2 : (i/(vals.length-1))*cW);
+      const yP=v=>pT+cH-((v-yMin)/yRng)*cH;
+      const ticks=Array.from({length:5},(_,i)=>yMin+(yRng*i)/4);
+
       if(chartType==='line'){
         const areaPts = `${xP(0).toFixed(1)},${(pT+cH).toFixed(1)} ` + vals.map((v,i)=>`${xP(i).toFixed(1)},${yP(v).toFixed(1)}`).join(' ') + ` ${xP(li).toFixed(1)},${(pT+cH).toFixed(1)}`;
         const linePts = vals.map((v,i)=>`${xP(i).toFixed(1)},${yP(v).toFixed(1)}`).join(' ');
-        return `<svg viewBox="0 0 ${W} ${H}" style="width:100%;height:auto;overflow:visible;"><defs><linearGradient id="trendGrad" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="${metric.color}" stop-opacity="0.18"></stop><stop offset="100%" stop-color="${metric.color}" stop-opacity="0.01"></stop></linearGradient></defs>${ticks.map(t => `<g><line x1="${pL}" x2="${W-pR}" y1="${yP(t)}" y2="${yP(t)}" stroke="#e5e7eb" stroke-width="1"></line><text x="${pL-6}" y="${yP(t)+4}" text-anchor="end" font-size="10" fill="#9ca3af">${fy(t)}</text></g>`).join('')}<polygon points="${areaPts}" fill="url(#trendGrad)"></polygon><polyline points="${linePts}" fill="none" stroke="${metric.color}" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"></polyline>${hasProj && vals.length>1 ? `<line x1="${xP(li-1).toFixed(1)}" y1="${yP(actuals[li-1]).toFixed(1)}" x2="${xP(li).toFixed(1)}" y2="${yP(vals[li]).toFixed(1)}" stroke="${metric.color}" stroke-width="2" stroke-dasharray="5,4" opacity="0.7"></line>` : ''}${vals.map((v,i)=>`<circle cx="${xP(i)}" cy="${yP(v)}" r="${i===li && hasProj ? 4 : 3}" fill="${i===li && hasProj ? '#3b82f6' : metric.color}" stroke="#fff" stroke-width="1.5"></circle>`).join('')}${hasProj ? `<g><rect x="${xP(li)-32}" y="${yP(vals[li])-24}" width="64" height="18" rx="4" fill="#3b82f6"></rect><text x="${xP(li)}" y="${yP(vals[li])-12}" text-anchor="middle" font-size="9" fill="#fff" font-weight="700">Proj ${fy(vals[li])}</text></g>` : ''}${vals.map((v,i)=>i%step===0 ? `<text x="${xP(i)}" y="${H-6}" text-anchor="middle" font-size="9" fill="#9ca3af">${fmtLabel(data[i].label,period)}</text>` : '').join('')}</svg>`;
+
+        return `
+          <svg viewBox="0 0 ${W} ${H}" style="width:100%;height:auto;overflow:visible;">
+            <defs>
+              <linearGradient id="trendGrad" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stop-color="${metric.color}" stop-opacity="0.18"></stop>
+                <stop offset="100%" stop-color="${metric.color}" stop-opacity="0.01"></stop>
+              </linearGradient>
+            </defs>
+            ${ticks.map(t => `
+              <g>
+                <line x1="${pL}" x2="${W-pR}" y1="${yP(t)}" y2="${yP(t)}" stroke="#e5e7eb" stroke-width="1"></line>
+                <text x="${pL-6}" y="${yP(t)+4}" text-anchor="end" font-size="10" fill="#9ca3af">${fy(t)}</text>
+              </g>
+            `).join('')}
+            <polygon points="${areaPts}" fill="url(#trendGrad)"></polygon>
+            <polyline points="${linePts}" fill="none" stroke="${metric.color}" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"></polyline>
+            ${hasProj && vals.length>1 ? `<line x1="${xP(li-1).toFixed(1)}" y1="${yP(actuals[li-1]).toFixed(1)}" x2="${xP(li).toFixed(1)}" y2="${yP(vals[li]).toFixed(1)}" stroke="${metric.color}" stroke-width="2" stroke-dasharray="5,4" opacity="0.7"></line>` : ''}
+            ${vals.map((v,i)=>`<circle cx="${xP(i)}" cy="${yP(v)}" r="${i===li && hasProj ? 4 : 3}" fill="${i===li && hasProj ? '#3b82f6' : metric.color}" stroke="#fff" stroke-width="1.5"></circle>`).join('')}
+            ${hasProj ? `<g><rect x="${xP(li)-32}" y="${yP(vals[li])-24}" width="64" height="18" rx="4" fill="#3b82f6"></rect><text x="${xP(li)}" y="${yP(vals[li])-12}" text-anchor="middle" font-size="9" fill="#fff" font-weight="700">Proj ${fy(vals[li])}</text></g>` : ''}
+            ${vals.map((v,i)=>i%step===0 ? `<text x="${xP(i)}" y="${H-6}" text-anchor="middle" font-size="9" fill="#9ca3af">${fmtLabel(data[i].label,period)}</text>` : '').join('')}
+          </svg>`;
       }
-      return `<svg viewBox="0 0 ${W} ${H}" style="width:100%;height:auto;overflow:visible;">${ticks.map(t => `<g><line x1="${pL}" x2="${W-pR}" y1="${yP(t)}" y2="${yP(t)}" stroke="#e5e7eb" stroke-width="1"></line><text x="${pL-6}" y="${yP(t)+4}" text-anchor="end" font-size="10" fill="#9ca3af">${fy(t)}</text></g>`).join('')}${vals.map((v,i)=>{ const x=pL+(i/Math.max(vals.length,1))*cW+cW/Math.max(vals.length,1)/2, bh=Math.max(((v-yMin)/yRng)*cH,1.5), cy=yP(v), ip=i===li && hasProj; return `<g><rect x="${x-bW/2}" y="${cy}" width="${bW}" height="${Math.max(bh,0)}" rx="3" fill="${ip?'#3b82f6':metric.color}" opacity="${ip?1:0.88}"></rect>${ip ? `<g><rect x="${x-28}" y="${cy-20}" width="56" height="16" rx="4" fill="#3b82f6"></rect><text x="${x}" y="${cy-9}" text-anchor="middle" font-size="9" fill="#fff" font-weight="700">Proj</text></g>` : ''}${i%step===0 ? `<text x="${x}" y="${H-6}" text-anchor="middle" font-size="9" fill="#9ca3af">${fmtLabel(data[i].label,period)}</text>` : ''}</g>`; }).join('')}</svg>`;
+
+      return `
+        <svg viewBox="0 0 ${W} ${H}" style="width:100%;height:auto;overflow:visible;">
+          ${ticks.map(t => `
+            <g>
+              <line x1="${pL}" x2="${W-pR}" y1="${yP(t)}" y2="${yP(t)}" stroke="#e5e7eb" stroke-width="1"></line>
+              <text x="${pL-6}" y="${yP(t)+4}" text-anchor="end" font-size="10" fill="#9ca3af">${fy(t)}</text>
+            </g>
+          `).join('')}
+          ${vals.map((v,i)=>{
+            const x=pL+(i/Math.max(vals.length,1))*cW+cW/Math.max(vals.length,1)/2,
+                  bh=Math.max(((v-yMin)/yRng)*cH,1.5),
+                  cy=yP(v),
+                  ip=i===li && hasProj;
+
+            return `
+              <g>
+                <rect x="${x-bW/2}" y="${cy}" width="${bW}" height="${Math.max(bh,0)}" rx="3" fill="${ip?'#3b82f6':metric.color}" opacity="${ip?1:0.88}"></rect>
+                ${ip ? `<g><rect x="${x-28}" y="${cy-20}" width="56" height="16" rx="4" fill="#3b82f6"></rect><text x="${x}" y="${cy-9}" text-anchor="middle" font-size="9" fill="#fff" font-weight="700">Proj</text></g>` : ''}
+                ${i%step===0 ? `<text x="${x}" y="${H-6}" text-anchor="middle" font-size="9" fill="#9ca3af">${fmtLabel(data[i].label,period)}</text>` : ''}
+              </g>`;
+          }).join('')}
+        </svg>`;
     }
 
     function renderShareChart(data, groups, period, dimension){
       if(!data.length) return '<div class="small-muted">No data available.</div>';
+
       const ms=dimension==='market' || dimension==='store' ? 50 : 100;
-      const W=680,H=230,pL=44,pB=36,pT=16,pR=16,cW=W-pL-pR,cH=H-pB-pT,n=data.length,xP=i=>pL+(n>1 ? i/(n-1) : 0.5)*cW,yP=v=>pT+cH-(Math.min(Math.max(v,0),ms)/ms)*cH,step=Math.ceil(n/10),active=groups.filter(g=>data.some(d=>(d[g]||0)>0)),ticks=ms===50 ? [0,10,20,30,40,50] : [0,25,50,75,100];
-      return `<svg viewBox="0 0 ${W} ${H}" style="width:100%;height:auto;"><defs>${active.map(g => `<linearGradient id="sg_${g.replace(/[^a-zA-Z0-9_-]/g,'_')}" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="${seriesColor(g,dimension)}" stop-opacity="0.12"></stop><stop offset="100%" stop-color="${seriesColor(g,dimension)}" stop-opacity="0.01"></stop></linearGradient>`).join('')}</defs>${ticks.map(t=>{ const y=pT+cH*(1-t/ms); return `<g><line x1="${pL}" x2="${W-pR}" y1="${y}" y2="${y}" stroke="#e5e7eb" stroke-width="1"></line><text x="${pL-5}" y="${y+4}" text-anchor="end" font-size="9" fill="#9ca3af">${t}%</text></g>`; }).join('')}${active.map(g=>{ const c=seriesColor(g,dimension), pts=data.map((d,i)=>`${xP(i).toFixed(1)},${yP(d[g]||0).toFixed(1)}`).join(' '), gid='sg_'+g.replace(/[^a-zA-Z0-9_-]/g,'_'); return `<g><polygon points="${xP(0).toFixed(1)},${(pT+cH)} ${pts} ${xP(n-1).toFixed(1)},${(pT+cH)}" fill="url(#${gid})"></polygon><polyline points="${pts}" fill="none" stroke="${c}" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"></polyline></g>`; }).join('')}${active.map(g => data.map((d,i)=>`<circle cx="${xP(i)}" cy="${yP(d[g]||0)}" r="2.5" fill="${seriesColor(g,dimension)}" stroke="#fff" stroke-width="1"></circle>`).join('')).join('')}${data.map((d,i)=>i%step===0 ? `<text x="${xP(i)}" y="${H-4}" text-anchor="middle" font-size="9" fill="#9ca3af">${fmtLabel(d.label,period)}</text>` : '').join('')}</svg>`;
+      const W=680,H=230,pL=44,pB=36,pT=16,pR=16,cW=W-pL-pR,cH=H-pB-pT,n=data.length;
+      const xP=i=>pL+(n>1 ? i/(n-1) : 0.5)*cW;
+      const yP=v=>pT+cH-(Math.min(Math.max(v,0),ms)/ms)*cH;
+      const step=Math.ceil(n/10);
+      const active=groups.filter(g=>data.some(d=>(d[g]||0)>0));
+      const ticks=ms===50 ? [0,10,20,30,40,50] : [0,25,50,75,100];
+
+      return `
+        <svg viewBox="0 0 ${W} ${H}" style="width:100%;height:auto;">
+          ${ticks.map(t=>{
+            const y=pT+cH*(1-t/ms);
+            return `
+              <g>
+                <line x1="${pL}" x2="${W-pR}" y1="${y}" y2="${y}" stroke="#e5e7eb" stroke-width="1"></line>
+                <text x="${pL-5}" y="${y+4}" text-anchor="end" font-size="9" fill="#9ca3af">${t}%</text>
+              </g>`;
+          }).join('')}
+          ${active.map(g=>{
+            const c=seriesColor(g,dimension);
+            const pts=data.map((d,i)=>`${xP(i).toFixed(1)},${yP(d[g]||0).toFixed(1)}`).join(' ');
+            return `
+              <g>
+                <polyline points="${pts}" fill="none" stroke="${c}" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"></polyline>
+              </g>`;
+          }).join('')}
+          ${active.map(g => data.map((d,i)=>`<circle cx="${xP(i)}" cy="${yP(d[g]||0)}" r="2.5" fill="${seriesColor(g,dimension)}" stroke="#fff" stroke-width="1"></circle>`).join('')).join('')}
+          ${data.map((d,i)=>i%step===0 ? `<text x="${xP(i)}" y="${H-4}" text-anchor="middle" font-size="9" fill="#9ca3af">${fmtLabel(d.label,period)}</text>` : '').join('')}
+        </svg>`;
+    }
+
+    function cohortMetricMeta(key){
+      const map = {
+        jobsPerListing: {
+          label: "Jobs / Listing",
+          color: "#10b981",
+          fmt: v => Number(v || 0).toFixed(2)
+        },
+        leadsPerListing: {
+          label: "Leads / Listing",
+          color: "#6366f1",
+          fmt: v => Number(v || 0).toFixed(2)
+        },
+        revenuePerListing: {
+          label: "Revenue / Listing",
+          color: "#f59e0b",
+          fmt: v => "$" + Math.round(v || 0).toLocaleString()
+        }
+      };
+
+      return map[key] || map.jobsPerListing;
+    }
+
+    function parseCohortNum(v){
+      const m = String(v || "").match(/\d+/);
+      return m ? Number(m[0]) : null;
+    }
+
+    function deriveMonthSinceGoLive(row){
+      if(row.monthlyCohort){
+        const n = parseCohortNum(row.monthlyCohort);
+        if(n) return n;
+      }
+
+      if(!row.openingMonth || !row.date) return null;
+
+      const start = new Date(row.openingMonth);
+      const end = new Date(row.date);
+
+      if(isNaN(start.getTime()) || isNaN(end.getTime())) return null;
+
+      return ((end.getFullYear() - start.getFullYear()) * 12) + (end.getMonth() - start.getMonth()) + 1;
+    }
+
+    function deriveQuarterSinceGoLive(row){
+      if(row.quarterlyCohort){
+        const n = parseCohortNum(row.quarterlyCohort);
+        if(n) return n;
+      }
+
+      const m = deriveMonthSinceGoLive(row);
+      return m ? Math.ceil(m / 3) : null;
+    }
+
+    function getCohortGroupValue(row){
+      if(state.cohortGroup === "monthly"){
+        if(row.openingMonth){
+          const d = new Date(row.openingMonth);
+          if(!isNaN(d.getTime())){
+            return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}`;
+          }
+        }
+
+        return row.monthlyCohort || "Unmapped Monthly Cohort";
+      }
+
+      if(state.cohortGroup === "age"){
+        return row.listingAge || "Unmapped Listing Age";
+      }
+
+      if(row.openingMonth){
+        const d = new Date(row.openingMonth);
+        if(!isNaN(d.getTime())){
+          return `${d.getFullYear()} Q${Math.ceil((d.getMonth()+1)/3)}`;
+        }
+      }
+
+      return row.quarterlyCohort || "Unmapped Quarterly Cohort";
+    }
+
+    function buildCohortGrowthSeries(rows){
+      const timeKeyLabel = state.cohortTime === "quarter" ? "Q" : "M";
+      const grouped = {};
+
+      rows.forEach(row => {
+        const timeNum = state.cohortTime === "quarter"
+          ? deriveQuarterSinceGoLive(row)
+          : deriveMonthSinceGoLive(row);
+
+        if(!timeNum || timeNum < 1) return;
+
+        const cohort = getCohortGroupValue(row);
+        const key = `${cohort}||${timeNum}`;
+
+        if(!grouped[key]){
+          grouped[key] = {
+            cohort,
+            timeNum,
+            label: `${timeKeyLabel}${timeNum}`,
+            leads: 0,
+            completed: 0,
+            revenue: 0,
+            stores: new Set()
+          };
+        }
+
+        grouped[key].leads += Number(row.leads) || 0;
+        grouped[key].completed += Number(row.completed) || 0;
+        grouped[key].revenue += Number(row.revenue) || 0;
+
+        if(row.store) grouped[key].stores.add(row.store);
+      });
+
+      const rowsOut = Object.values(grouped).map(g => {
+        const storeCount = g.stores.size || 0;
+
+        return {
+          cohort: g.cohort,
+          timeNum: g.timeNum,
+          label: g.label,
+          storeCount,
+          leads: g.leads,
+          completed: g.completed,
+          revenue: g.revenue,
+          jobsPerListing: storeCount ? g.completed / storeCount : 0,
+          leadsPerListing: storeCount ? g.leads / storeCount : 0,
+          revenuePerListing: storeCount ? g.revenue / storeCount : 0
+        };
+      });
+
+      const cohorts = [...new Set(rowsOut.map(r => r.cohort))]
+        .filter(Boolean)
+        .sort();
+
+      const timeNums = [...new Set(rowsOut.map(r => r.timeNum))]
+        .filter(Boolean)
+        .sort((a,b) => a-b);
+
+      const series = timeNums.map(timeNum => {
+        const point = {
+          timeNum,
+          label: `${timeKeyLabel}${timeNum}`
+        };
+
+        cohorts.forEach(cohort => {
+          const match = rowsOut.find(r => r.cohort === cohort && r.timeNum === timeNum);
+          point[cohort] = match ? match[state.cohortMetric] : null;
+        });
+
+        return point;
+      });
+
+      return { series, cohorts, rowsOut };
+    }
+
+    function renderCohortChart(data, cohorts){
+      if(!data.length || !cohorts.length){
+        return '<div class="small-muted">No cohort data available.</div>';
+      }
+
+      const metric = cohortMetricMeta(state.cohortMetric);
+      const W = 760, H = 280;
+      const pL = 68, pR = 20, pT = 20, pB = 42;
+      const cW = W - pL - pR;
+      const cH = H - pT - pB;
+
+      const allVals = [];
+      data.forEach(d => {
+        cohorts.forEach(c => {
+          if(d[c] !== null && d[c] !== undefined && !isNaN(d[c])) {
+            allVals.push(Number(d[c]));
+          }
+        });
+      });
+
+      const maxV = Math.max(...allVals, 1);
+      const yMax = maxV * 1.15;
+
+      const xP = i => pL + (data.length === 1 ? cW / 2 : (i / (data.length - 1)) * cW);
+      const yP = v => pT + cH - ((v || 0) / yMax) * cH;
+
+      const ticks = [0, 0.25, 0.5, 0.75, 1].map(t => yMax * t);
+      const step = Math.ceil(data.length / 12);
+
+      return `
+        <svg viewBox="0 0 ${W} ${H}" style="width:100%;height:auto;overflow:visible;">
+          ${ticks.map(t => `
+            <g>
+              <line x1="${pL}" x2="${W-pR}" y1="${yP(t)}" y2="${yP(t)}" stroke="#e5e7eb" stroke-width="1"></line>
+              <text x="${pL-6}" y="${yP(t)+4}" text-anchor="end" font-size="10" fill="#9ca3af">${metric.fmt(t)}</text>
+            </g>
+          `).join("")}
+
+          ${cohorts.map(cohort => {
+            const points = data.map((d,i) => {
+              if(d[cohort] === null || d[cohort] === undefined || isNaN(d[cohort])) return null;
+              return { x:xP(i), y:yP(d[cohort]), value:d[cohort] };
+            });
+
+            const validPoints = points.filter(Boolean);
+            if(!validPoints.length) return "";
+
+            const pts = validPoints.map(p => `${p.x.toFixed(1)},${p.y.toFixed(1)}`).join(" ");
+
+            return `
+              <g>
+                <polyline points="${pts}" fill="none" stroke="${seriesColor(cohort,'cohort')}" stroke-width="2.2" stroke-linejoin="round" stroke-linecap="round"></polyline>
+                ${points.map(p => {
+                  if(!p) return "";
+                  return `<circle cx="${p.x}" cy="${p.y}" r="3.2" fill="${seriesColor(cohort,'cohort')}" stroke="#fff" stroke-width="1.5"></circle>`;
+                }).join("")}
+              </g>
+            `;
+          }).join("")}
+
+          ${data.map((d,i) => i % step === 0 ? `
+            <text x="${xP(i)}" y="${H-8}" text-anchor="middle" font-size="10" fill="#9ca3af">${escapeHtml(d.label)}</text>
+          ` : "").join("")}
+        </svg>
+      `;
+    }
+
+    function renderCohortTab(filtered){
+      document.querySelectorAll('#cohortMetricToggle .toggle-btn').forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.cohortMetric === state.cohortMetric);
+      });
+
+      document.querySelectorAll('#cohortTimeToggle .toggle-btn').forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.cohortTime === state.cohortTime);
+      });
+
+      document.querySelectorAll('#cohortGroupToggle .toggle-btn').forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.cohortGroup === state.cohortGroup);
+      });
+
+      const metric = cohortMetricMeta(state.cohortMetric);
+      const result = buildCohortGrowthSeries(filtered);
+
+      const groupLabel = state.cohortGroup === "monthly"
+        ? "Monthly Cohort"
+        : state.cohortGroup === "age"
+          ? "Listing Age"
+          : "Quarterly Cohort";
+
+      const timeLabel = state.cohortTime === "quarter"
+        ? "Quarter Since Go-Live"
+        : "Month Since Go-Live";
+
+      el("cohortChartTitle").textContent = `${metric.label} by ${timeLabel} — ${groupLabel}`;
+
+      el("cohortChartLegend").innerHTML = result.cohorts.map(c => `
+        <div class="legend-item">
+          <div class="legend-dot" style="background:${seriesColor(c,'cohort')}"></div>
+          <span style="color:#6b7280;font-weight:600;">${escapeHtml(c)}</span>
+        </div>
+      `).join("");
+
+      el("cohortChartArea").innerHTML = renderCohortChart(result.series, result.cohorts);
+
+      const latestByCohort = result.cohorts.map(cohort => {
+        const rows = result.rowsOut
+          .filter(r => r.cohort === cohort)
+          .sort((a,b) => b.timeNum - a.timeNum);
+
+        return { cohort, latest: rows[0] };
+      }).filter(x => x.latest);
+
+      el("cohortSummary").innerHTML = latestByCohort.map(x => `
+        <div class="share-card">
+          <div class="share-title">
+            <div class="legend-dot" style="width:8px;height:8px;background:${seriesColor(x.cohort,'cohort')}"></div>
+            <span>${escapeHtml(x.cohort)}</span>
+          </div>
+          <div class="share-value">${metric.fmt(x.latest[state.cohortMetric])}</div>
+          <div class="small-muted">
+            ${state.cohortTime === "quarter" ? "Q" : "M"}${x.latest.timeNum}
+            · ${x.latest.storeCount} listings
+          </div>
+        </div>
+      `).join("");
     }
 
     function bindEvents(){
-      document.querySelectorAll('.period-btn').forEach(btn => btn.addEventListener('click', () => { state.period = btn.dataset.period; render(); }));
-      el('channelSelect').addEventListener('change', e => { state.channel = e.target.value; render(); });
-      el('storeSelect').addEventListener('change', e => { state.store = e.target.value; render(); });
-      el('marketSelect').addEventListener('change', e => { state.market = e.target.value; render(); });
-      el('listingAgeSelect').addEventListener('change', e => { state.listingAge = e.target.value; render(); });
-      document.querySelectorAll('.tab-btn').forEach(btn => btn.addEventListener('click', () => { state.tab = btn.dataset.tab; render(); }));
-      el('monthSelect').addEventListener('change', e => { state.ovMonth = e.target.value; render(); });
-      el('metricToolbar').addEventListener('click', e => { const btn = e.target.closest('[data-metric]'); if(!btn) return; state.trendKey = btn.dataset.metric; if(SHARE_INCOMPATIBLE.has(state.trendKey) && state.trendView === 'share') state.trendView = 'absolute'; render(); });
-      el('chartTypeToggle').addEventListener('click', e => { const btn = e.target.closest('[data-chart]'); if(!btn) return; state.chartType = btn.dataset.chart; render(); });
-      el('trendViewToggle').addEventListener('click', e => { const btn = e.target.closest('[data-view]'); if(!btn) return; if(btn.dataset.view === 'share' && SHARE_INCOMPATIBLE.has(state.trendKey)) return; state.trendView = btn.dataset.view; render(); });
-      el('shareDimToggle').addEventListener('click', e => { const btn = e.target.closest('[data-share-dim]'); if(!btn) return; state.shareDim = btn.dataset.shareDim; render(); });
+      document.querySelectorAll('.period-btn').forEach(btn => btn.addEventListener('click', () => {
+        state.period = btn.dataset.period;
+        render();
+      }));
+
+      el('channelSelect').addEventListener('change', e => {
+        state.channel = e.target.value;
+        render();
+      });
+
+      el('storeSelect').addEventListener('change', e => {
+        state.store = e.target.value;
+        render();
+      });
+
+      el('marketSelect').addEventListener('change', e => {
+        state.market = e.target.value;
+        render();
+      });
+
+      el('listingAgeSelect').addEventListener('change', e => {
+        state.listingAge = e.target.value;
+        render();
+      });
+
+      document.querySelectorAll('.tab-btn').forEach(btn => btn.addEventListener('click', () => {
+        state.tab = btn.dataset.tab;
+        render();
+      }));
+
+      el('monthSelect').addEventListener('change', e => {
+        state.ovMonth = e.target.value;
+        render();
+      });
+
+      el('metricToolbar').addEventListener('click', e => {
+        const btn = e.target.closest('[data-metric]');
+        if(!btn) return;
+
+        state.trendKey = btn.dataset.metric;
+
+        if(SHARE_INCOMPATIBLE.has(state.trendKey) && state.trendView === 'share') {
+          state.trendView = 'absolute';
+        }
+
+        render();
+      });
+
+      el('chartTypeToggle').addEventListener('click', e => {
+        const btn = e.target.closest('[data-chart]');
+        if(!btn) return;
+
+        state.chartType = btn.dataset.chart;
+        render();
+      });
+
+      el('trendViewToggle').addEventListener('click', e => {
+        const btn = e.target.closest('[data-view]');
+        if(!btn) return;
+
+        if(btn.dataset.view === 'share' && SHARE_INCOMPATIBLE.has(state.trendKey)) return;
+
+        state.trendView = btn.dataset.view;
+        render();
+      });
+
+      el('shareDimToggle').addEventListener('click', e => {
+        const btn = e.target.closest('[data-share-dim]');
+        if(!btn) return;
+
+        state.shareDim = btn.dataset.shareDim;
+        render();
+      });
+
+      el('cohortMetricToggle').addEventListener('click', e => {
+        const btn = e.target.closest('[data-cohort-metric]');
+        if(!btn) return;
+
+        state.cohortMetric = btn.dataset.cohortMetric;
+        render();
+      });
+
+      el('cohortTimeToggle').addEventListener('click', e => {
+        const btn = e.target.closest('[data-cohort-time]');
+        if(!btn) return;
+
+        state.cohortTime = btn.dataset.cohortTime;
+        render();
+      });
+
+      el('cohortGroupToggle').addEventListener('click', e => {
+        const btn = e.target.closest('[data-cohort-group]');
+        if(!btn) return;
+
+        state.cohortGroup = btn.dataset.cohortGroup;
+        render();
+      });
     }
 
     function render(){
       renderSelects();
       renderControls();
+
       const filtered = getFiltered();
       const series = buildTimeSeries(filtered, state.period);
+
       renderHeader(filtered, series);
       renderOverview(filtered, series);
       renderTrends(filtered, series);
+      renderCohortTab(filtered);
     }
 
     async function init(){
@@ -1109,9 +1844,12 @@
         const d = await loadData();
         console.log('GBL live sample keys:', Object.keys(d[0] || {}));
         console.log('GBL live sample row:', d[0]);
+
         state.rawData = mapRows(d);
+
         console.log('GBL mapped sample row:', state.rawData[0]);
         console.log('GBL store values:', [...new Set(state.rawData.map(r => r.store))].slice(0, 25));
+
         state.fallback = false;
       } catch (err) {
         console.error('GBL data load failed. Using fallback sample data.', err);
@@ -1128,14 +1866,22 @@
       } catch (err) {
         console.error('GBL dashboard render failed:', err);
         el('subtitle').textContent = 'Dashboard render error. Open DevTools Console to view details.';
-        el('kpiGrid').innerHTML = '<div class="card"><div class="section-label">Render Error</div><div class="small-muted">The data loaded, but the dashboard failed while rendering. Check the console logs for the exact field or function causing the issue.</div></div>';
+        el('kpiGrid').innerHTML = `
+          <div class="card">
+            <div class="section-label">Render Error</div>
+            <div class="small-muted">
+              The data loaded, but the dashboard failed while rendering. Check the console logs for the exact field or function causing the issue.
+            </div>
+          </div>`;
       }
     }
 
     window.addEventListener('error', function(event){
       console.error('Global dashboard error:', event.error || event.message);
+
       const loading = document.getElementById('loading');
       const app = document.getElementById('app');
+
       if(loading) loading.classList.add('hidden');
       if(app) app.classList.remove('hidden');
     });
